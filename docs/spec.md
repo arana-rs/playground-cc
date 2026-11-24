@@ -2,6 +2,8 @@
 
 Browser-based C playground for learning and teaching C.
 
+License: **AGPL-3.0** (see [LICENSE](../LICENSE), [licensing](spec/licensing.md)).
+
 **How to read this spec.** This page holds the principles and a map. Each topic lives in its own file under [`spec/`](spec/), short enough to read on its own: read this page first, then only the fragments your task needs. Decisions live here; research notes and benchmarks do not.
 
 ---
@@ -38,6 +40,7 @@ Nothing is built for these, and the architecture does not account for them.
 | [engine](spec/engine.md) | The C engine's execution model: resumable interpreter, interactive `stdin`, stepping, Stop and budgets |
 | [deployment](spec/deployment.md) | Static hosting with static-web-server behind a TLS reverse proxy, route fallback |
 | [roadmap](spec/roadmap.md) | Phases, each phase's exit tests and every feature's phase |
+| [licensing](spec/licensing.md) | What the AGPL-3.0 covers: the playground's own code, not the programs users write or their output; reference compilers used only as test tools |
 
 ---
 
