@@ -1,4 +1,4 @@
-# playground-c: specification
+# playground-cc: specification
 
 Browser-based C playground for learning and teaching C.
 
@@ -8,7 +8,7 @@ Browser-based C playground for learning and teaching C.
 
 ## Principles
 
-- **Learning and teaching**: playground-c is for people learning C and for those teaching it. When a choice has to be made, seeing and understanding what the program does comes before speed or completeness.
+- **Learning and teaching**: playground-cc is for people learning C and for those teaching it. When a choice has to be made, seeing and understanding what the program does comes before speed or completeness.
 - **Runs in the browser**: the site is static files and the engine runs in a Web Worker ([deployment](spec/deployment.md), [engine](spec/engine.md)). There is no backend.
 - **Engine independent of the UI**: the engine imports no DOM, React or Worker APIs; the Worker and the UI sit on top of it.
 - **Explicit diagnostics**: anything unsupported, and any undefined behavior the engine detects, stops the program with a clear diagnostic. Nothing is silently accepted or guessed.

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-playground-c: browser-based C playground. The repo is in the specification
+playground-cc: browser-based C playground. The repo is in the specification
 phase: `docs/` is the product; no code exists yet.
 
 ## Read first

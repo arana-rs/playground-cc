@@ -1,6 +1,6 @@
 # Frontend
 
-> Part of the [playground-c spec](../spec.md). Related: [deployment](deployment.md).
+> Part of the [playground-cc spec](../spec.md). Related: [deployment](deployment.md).
 
 ## Technologies
 

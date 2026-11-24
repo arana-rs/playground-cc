@@ -1,6 +1,6 @@
 # C engine
 
-> Part of the [playground-c spec](../spec.md). Related: [frontend](frontend.md), [deployment](deployment.md).
+> Part of the [playground-cc spec](../spec.md). Related: [frontend](frontend.md), [deployment](deployment.md).
 
 ## Execution model
 

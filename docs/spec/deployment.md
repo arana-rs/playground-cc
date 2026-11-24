@@ -1,6 +1,6 @@
 # Deployment
 
-> Part of the [playground-c spec](../spec.md). Related: [frontend](frontend.md).
+> Part of the [playground-cc spec](../spec.md). Related: [frontend](frontend.md).
 
 - The site is the static output of the [frontend](frontend.md) build. There is no backend.
 - It is served by [static-web-server](https://static-web-server.net/) on a self-managed VPS.
