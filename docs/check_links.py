@@ -4,10 +4,9 @@
 Usage: python3 docs/check_links.py   (from any directory)
 
 - Links: every relative link points to an existing file and heading anchor.
-- Error codes: every code written in the spec (`area.reason`, optionally with
-  its status, as in `409 album.name_taken`) is listed in docs/spec/errors.md
-  with the same status, and every code listed there is used somewhere else.
-  Skipped while docs/spec/errors.md does not exist.
+- Diagnostic codes: every code written in the spec (`area.reason`, as in
+  `limit.steps`) is listed in docs/spec/errors.md, and every code listed there
+  is used somewhere else. Skipped while docs/spec/errors.md does not exist.
 
 Exits 1 and lists each problem when any is found.
 """
@@ -20,9 +19,8 @@ DOCS = Path(__file__).resolve().parent
 ERRORS = DOCS / "spec" / "errors.md"
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 HEADING = re.compile(r"^#+\s+(.*)$", re.M)
-CATALOG_ROW = re.compile(r"^\| `([a-z]+\.[a-z_]+)` \| (\d{3}) \|", re.M)
-CODE = re.compile(r"`(?:(\d{3}) )?([a-z]+)\.([a-z_]+)`")
-TEMPLATE = re.compile(r"`(?:\d{3} )?<area>\.([a-z_]+)`")
+CATALOG_ROW = re.compile(r"^\| `([a-z]+\.[a-z_]+)` \|", re.M)
+CODE = re.compile(r"`([a-z]+\.[a-z_]+)`")
 # Backticked `area.reason` tokens that are not error codes (event names, file names).
 NOT_CODES: set[str] = set()
 
@@ -54,27 +52,20 @@ def check_links(files: list[Path]) -> list[str]:
 def check_codes(files: list[Path]) -> list[str]:
     if not ERRORS.exists():
         return []
-    catalog = dict(CATALOG_ROW.findall(ERRORS.read_text()))
+    catalog = set(CATALOG_ROW.findall(ERRORS.read_text()))
     areas = {code.split(".")[0] for code in catalog}
-    problems, used, templates = [], set(), set()
+    problems, used = [], set()
     for f in files:
         if f.resolve() == ERRORS.resolve():
             continue
-        text = f.read_text()
-        templates.update(TEMPLATE.findall(text))
-        for status, area, reason in CODE.findall(text):
-            code = f"{area}.{reason}"
-            if area not in areas or code in NOT_CODES:
+        for code in CODE.findall(f.read_text()):
+            if code.split(".")[0] not in areas or code in NOT_CODES:
                 continue
             used.add(code)
-            name = f.relative_to(DOCS)
             if code not in catalog:
-                problems.append(f"unknown error code: {name} -> {code}")
-            elif status and status != catalog[code]:
-                problems.append(f"status mismatch: {name} -> {status} {code} (errors.md: {catalog[code]})")
-    for code in catalog:
-        if code not in used and code.split(".")[1] not in templates:
-            problems.append(f"unused error code: errors.md -> {code}")
+                problems.append(f"unknown error code: {f.relative_to(DOCS)} -> {code}")
+    for code in sorted(catalog - used):
+        problems.append(f"unused error code: errors.md -> {code}")
     return problems
 
 
