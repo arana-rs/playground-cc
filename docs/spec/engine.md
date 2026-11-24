@@ -11,4 +11,5 @@
   - **Stepping**: the debugger and the memory snapshots read the paused state.
   - **Stop**: execution ends between two steps.
   - **Execution budgets**: counted in steps.
+- Threads (planned, [roadmap](roadmap.md#in-the-roadmap)) must fit this model: each thread is one more set of execution state, and the engine's scheduler decides which one takes the next step.
 - No `SharedArrayBuffer` or `Atomics.wait`, so the site needs no cross-origin isolation headers (COOP/COEP) ([deployment](deployment.md)).
