@@ -15,7 +15,7 @@ How the engine represents memory, what a pointer is, and which memory errors it 
 ## Pointers
 
 - **A pointer is a block and an offset** (0.3). Every access checks them against the block, which is how the memory errors below are found.
-- **Addresses are deterministic**: each block also gets a numeric address, from fixed x86-64-like bases (static data low, the heap above it, the stack near the top of user space, growing down). Within a frame, parameters and then locals get ascending addresses in declaration order. The same program gets the same addresses on every run. Heap addresses are never reused. Native programs get different addresses on every run, so the oracle tests never print one.
+- **Addresses are deterministic**: each block also gets a numeric address, from fixed x86-64-like bases (static data low, the heap above it, the stack near the top of user space, growing down). Within a frame, parameters and then locals get ascending addresses in declaration order. The same program gets the same addresses on every run. Heap addresses are never reused; when the heap's address range is used up, an allocation returns `NULL`, as when the heap is full. Native programs get different addresses on every run, so the oracle tests never print one.
 - **A pointer stored in memory keeps its block byte by byte**: each of its 8 bytes remembers the block and its position in the pointer, and copying the bytes in any way (`memcpy`, a loop over `unsigned char`) copies that too. Reading 8 bytes that are the 8 bytes of one pointer, in order, gives that pointer back; any other mix gives a pointer with no block, and using it stops with `ub.invalid_pointer`.
 - **Integers and pointers**: converting a pointer to an integer gives its address. Converting an integer to a pointer is not supported (`unsupported.construct` with key `integer_to_pointer`, [language](language.md#not-supported)), except a null pointer constant.
 - `NULL` is address 0 with no block.
@@ -23,7 +23,9 @@ How the engine represents memory, what a pointer is, and which memory errors it 
 
 ## The stack and the heap
 
-- **Stack**: each call adds a frame with a fixed cost of 16 bytes (the return address and the saved frame pointer, as on x86-64) plus the blocks of its locals. The stack has a size in bytes ([limits](limits.md)); a call that does not fit stops the program with `limit.stack`, so `void f(void) { f(); }` stops too.
+- **Sizes never overflow**: the engine computes every object's size, and every total below, in a way that cannot overflow, so a huge object meets its limit instead of wrapping around to a small size.
+- **Static data**: globals, `static` variables and string literals have a size in bytes together ([limits](limits.md)). The engine adds them up before the run, before any of them is allocated; past the limit, the program does not start and stops with `limit.static_data`, so `static char big[1L << 40];` is refused, not allocated.
+- **Stack**: each call adds a frame with a fixed cost of 16 bytes (the return address and the saved frame pointer, as on x86-64) plus the blocks of its locals. The stack has a size in bytes ([limits](limits.md)); the frame is checked before any of its blocks is allocated, and a call that does not fit stops the program with `limit.stack`, so `void f(void) { f(); }` stops too, and a local `char big[1L << 40];` is never allocated.
 - **Heap** (0.5): `malloc` creates a heap block; `malloc(0)` gives a unique non-null pointer to an empty block, as glibc does. The heap has a size counted in live bytes plus a fixed overhead per block, so a loop of `malloc(0)` also runs out (freed blocks give theirs back, [limits](limits.md)); when an allocation does not fit, it returns `NULL`, as C allows, so the program can check for it. `free(NULL)` does nothing. `calloc` and `realloc` follow these rules, plus their own in [libc](libc.md#heap).
 
 ## Detected errors

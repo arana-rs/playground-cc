@@ -19,7 +19,7 @@ Every phase keeps the tests of the earlier ones green: a phase is done when its 
 - Minimal C: `int`, operators, `if`, `while`, `do`, `for`, `switch`, `break`, `continue`, functions and recursion ([language](language.md#supported-by-phase)); `printf` with `%d` and `%s`, `putchar`, `puts` and `exit` ([libc](libc.md#headers-and-functions))
 - Explicit diagnostic for every unsupported construct ([language](language.md#not-supported))
 - Undefined behavior detected: division by zero, reading an uninitialized variable, unsequenced modifications (`i = i++`), using the value of a function that ended without `return` ([language](language.md#undefined-behavior))
-- Stop, and the step budget, stack size, output limit and source size, with provisional values ([limits](limits.md))
+- Stop, and the step budget (before the run too), stack size, static data size, output limit, source size and nesting depth, with provisional values ([limits](limits.md))
 - i18n (`es`, `en`) from the first string; dark and light mode
 - Deployment with static-web-server ([deployment](deployment.md))
 - Test infrastructure: the oracle and engine tests, a minimal end-to-end smoke suite with Playwright, and CI running every test on each change ([testing](testing.md))
@@ -68,14 +68,14 @@ Every phase keeps the tests of the earlier ones green: a phase is done when its 
 - Exit tests: a program split into two `.c` files and a header prints what GCC prints when built from the same files
 
 **0.10 Standard library**
-- `<math.h>`, the rest of `<stdlib.h>` (`qsort`, `bsearch`, conversions, `rand`), `<ctype.h>`, `<time.h>` with a fixed clock, and `<assert.h>` ([libc](libc.md#headers-and-functions))
+- `<math.h>`, the rest of `<stdlib.h>` (`qsort`, `bsearch`, conversions, `rand`), `<ctype.h>`, `<time.h>` with a deterministic clock, and `<assert.h>` ([libc](libc.md#headers-and-functions))
 - Function pointers ([language](language.md#supported-by-phase))
-- Exit tests: each new function prints what GCC prints in the oracle tests, except `time` and `clock`, which give their fixed, deterministic values
+- Exit tests: each new function prints what GCC prints in the oracle tests, except `time` and `clock`, which give deterministic values (`time` 0, `clock` counted in steps)
 
 **0.11 Sharing and offline**
-- Sharing a program by URL, and exporting and importing it as files ([sharing](sharing.md))
+- Sharing a program by URL, and exporting it as files ([sharing](sharing.md))
 - Works offline once loaded, with a service worker ([offline](offline.md))
-- Exit tests: a shared link opens the same program; an exported file imports back; the playground runs a program with the network off
+- Exit tests: a shared link opens the same program; a link past a bound is refused with the editor unchanged; an exported program of several files unzips to the same files; the playground runs a program with the network off
 
 **1.0 Close**
 - No new features. Every "set by measuring" value of the features up to 1.0 gets its measured value.
@@ -89,6 +89,7 @@ After 1.0.
 - **C++**: C++ support.
 - **Examples**: a set of example programs to open in the editor.
 - **Exercises**: exercises to solve in the playground.
+- **Import**: opening `.c` files from the computer into the editor, and `.cpp` and `.cc` once C++ arrives ([sharing](sharing.md#import-planned)).
 - **Files**: `fopen` and the other file functions over an in-browser file system ([libc](libc.md#headers-and-functions)).
 - **Differential fuzzing with Csmith**: random programs free of undefined behavior, generated without what the subset lacks, run through the engine and GCC and compared ([testing](testing.md#differential-fuzzing-planned)).
 

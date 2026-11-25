@@ -1,6 +1,6 @@
 # C language
 
-> Part of the [playground-cc spec](../spec.md). Related: [errors](errors.md), [engine](engine.md), [roadmap](roadmap.md).
+> Part of the [playground-cc spec](../spec.md). Related: [errors](errors.md), [engine](engine.md), [libc](libc.md), [memory](memory.md), [roadmap](roadmap.md).
 
 The C the engine accepts: the standard, the target platform, what is supported in each phase and what is not supported at all. The standard library subset is a separate topic.
 

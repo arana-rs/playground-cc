@@ -24,14 +24,14 @@ The memory view (0.8, 1.0) is a window over the page that steps through the prog
 - **Step back** returns to the previous pause, with the memory, the output and the input exactly as they were there. The engine runs the program again from the start, with the input lines already sent, up to that pause: runs are deterministic, so the replay reaches the same state.
 - **Play** steps forward once every interval of the play speed (0.25, 0.5, 1 or 2 seconds; 0.5 by default). It pauses at a diagnostic, at the end of the program, when the program waits for input, or with Pause. Pressing a step button while playing pauses first.
 - **Stop** ends the program, also while it waits for input or in the middle of a long step (an infinite loop on one line). The drawing stays at the last pause, Step forward and Play are disabled, and Step back works when there is an earlier pause.
-- **Limits**: the session's run and each replay start from step 0 with the same run limits as a run ([limits](limits.md)).
+- **Limits**: the session's run and each replay start from step 0 with the same run limits as a run, the steps before the run included ([limits](limits.md), [engine](engine.md#before-the-run)), so a replay reaches `limit.steps` at the same point.
 - **A diagnostic** pauses where it happened, shows it under the toolbar and marks the block it is about. Step forward and Play are disabled; Step back works.
 - **When the program ends**, the status shows its exit status, and the drawing shows what is left: static data and the heap blocks not freed (the leaks, [memory](memory.md#leak-report)).
 
 ## I/O
 
 - **Off** (the default): `stdin` is empty, so every read returns `EOF` at once. Output still counts toward the output limit but is neither sent nor shown, and there is no Console section.
-- **On**: the Console section shows the program's output up to the current pause, without input echo, and, when the program reads with no line waiting, the input field and the end-of-input action, as on the page ([libc](libc.md#input)). Play pauses while it waits. Lines sent are kept: stepping back and forward again reuses them instead of asking.
+- **On**: the Console section shows the program's output up to the current pause, without input echo, and, when the program reads with no line waiting, the input field and the end-of-input action, as on the page ([libc](libc.md#input)), with control, C1 and bidirectional characters shown as marks as in the page's console ([frontend screens](frontend-screens.md#console)). Play pauses while it waits. Lines sent are kept: stepping back and forward again reuses them instead of asking.
 - Switching I/O restarts the session from the beginning, since it changes what the program reads.
 
 ## What it shows
@@ -44,7 +44,7 @@ The program's live state, and what it still points to:
 ## Drawing
 
 - **One box per scalar** (an integer, a character, a floating-point value, a pointer or an enum): its address above, its value inside, its label below. Every box has the same size whatever its type's size; the addresses show the sizes.
-- **Detail level**: Minimal draws the boxes as above. Detailed also writes each box's type and size under its label, and draws the padding between struct members and after them as `?` boxes with their size.
+- **Detail level**: Minimal (the default) draws the boxes as above. Detailed also writes each box's type (with its `typedef` names, [errors](errors.md#format)) and size under its label, and draws the padding between struct members and after them as `?` boxes with their size.
 - **Arrays and structs** become a row of boxes, one per scalar element or member, labeled with their path: `a[0]`, `a[1]`, `s.x`, `s.pts[1].y`. A union draws each member's boxes, all starting at the union's address.
 - **Values**: integers in decimal, `_Bool` as `true` or `false`, floating-point values as the debugger prints them, an enum by its name, a `char` as a C character literal (`'A'`, `'\0'`, `'\n'`, `'\xc3'` for bytes outside printable ASCII). A pointer shows its address, or `NULL`; a function pointer (0.10) shows the function's name. A scalar with any unwritten byte shows `?` ([memory](memory.md#blocks)), and a pointer with no block shows its address, marked invalid.
 - **Stack**: one row per frame, innermost first as `backtrace` lists them, captioned with the function and its current location. In each frame, boxes follow their addresses, which follow declaration order ([memory](memory.md#pointers)). A dead local shows in a dimmed row at the end of the section, captioned with its function.
@@ -53,21 +53,21 @@ The program's live state, and what it still points to:
 - **Locations** are the line, or `file:line` from 0.9.
 - **An empty section** says so.
 - **No arrows**: hovering, focusing or tapping a pointer's box highlights the box that holds the address it points to, in any section, as matching its address by eye would; a dead block's dimmed box, or a collapsed section's header when the target is inside it. A pointer one past the end of its block, `NULL`, an invalid pointer or a function pointer highlights nothing.
-- **Details on hover or focus**: a box's type, its size in bytes and its full label.
+- **Details on hover or focus**: a box's type, its size in bytes and its full label, up to the text length limit.
 - **Changes**: a box whose value changed since the previous pause is marked.
-- **Limits** ([limits](limits.md#run-limits)): past the boxes per block, the rest of a block is one "N more" box; past the boxes per snapshot, the rest of each section is one "N more blocks" line. The snapshot fills the Stack first (innermost frame first), then the Heap, then Static data.
+- **Limits** ([limits](limits.md#run-limits)): building a snapshot never goes past these caps. Past the boxes per block, the rest of a block is one `…` box, without counting what it holds; past the boxes per snapshot, the rest of each section is one line: "N more frames" in the Stack, "N more blocks" in the others. Each frame and each block counts as one box besides its own boxes, so frames without locals and `malloc(0)` blocks count too. The snapshot fills the Stack first (innermost frame first), then the Heap, then Static data. Labels, types and captions longer than the text length limit are cut with `…`.
 
 ## Accessibility
 
 - The window traps the focus while open, and Escape closes it. Every button is reachable from the keyboard.
-- The boxes are one grid with a single tab stop, moved through with the arrow keys. Each box reads as its label, address and value, plus its state when it has one (unwritten, invalid, dead, changed, the diagnostic's block) and, for a pointer, the label of the box it points to.
+- The boxes are one grid with a single tab stop, moved through with the arrow keys. Each box reads as its label, address and value, plus its state when it has one (unwritten, invalid, dead, changed, the diagnostic's block) and, for a pointer, the label of the box it points to. A `…` box reads as the rest of its block, not shown.
 - The live region announces the status and, when stepping by hand, the new line; not each line while playing.
 - On phones the window fills the screen and the rows wrap.
 
 ## Where it lives
 
 - **The engine** runs the session and builds a snapshot of memory at each pause, as data: the sections; the frames; each block's id, kind, whether it is alive, the call that allocated it, its size and its location; each box's address, label path, type, size, and value or unwritten state; a pointer's target (block id and offset, `NULL`, invalid, or a function); the diagnostic's block id. Building it costs no steps.
-- **The Worker** keeps the session's input lines, whether end of input was sent, and the step count of each pause (also the pauses passed when replaying to a diagnostic), so it can replay up to any of them.
+- **The Worker** keeps the session's input lines, whether end of input was sent, and the number of the current pause, never a list of pauses: Step back runs the program again from the start, counting pauses, up to the one before; opening at a diagnostic counts the pauses on the way.
 - **The UI** draws the snapshot. Captions and notices come from the message catalogs; values are never translated. It finds the changed boxes by comparing with the previous pause's snapshot by block id and label path, runs the Play timer, and keeps the session's output, showing as much of it as the current pause says.
 
 ## Messages

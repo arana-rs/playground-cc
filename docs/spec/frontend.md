@@ -1,6 +1,6 @@
 # Frontend
 
-> Part of the [playground-cc spec](../spec.md). Related: [architecture](architecture.md), [worker protocol](worker-protocol.md), [errors](errors.md), [deployment](deployment.md).
+> Part of the [playground-cc spec](../spec.md). Related: [frontend screens](frontend-screens.md), [architecture](architecture.md), [worker protocol](worker-protocol.md), [errors](errors.md), [deployment](deployment.md).
 
 The base of the web app: technologies, the single page, diagnostics, preferences, saving the code, i18n, shortcuts, accessibility and browser support. The layout and where the 1.0 features go are in [frontend screens](frontend-screens.md).
 
@@ -20,7 +20,7 @@ The base of the web app: technologies, the single page, diagnostics, preferences
 ## One page
 
 - The app is one page at `/`, with no router. A router comes back only if a second screen appears (exercises, planned).
-- Sharing a program by URL (0.11, 1.0, [sharing](sharing.md)) puts it in the URL fragment (`#…`), which the browser never sends to the server, so shared code stays out of server logs ([principles](../spec.md#principles)). A shared program never runs until the user presses Run ([security](security.md)).
+- Sharing a program by URL (0.11, 1.0, [sharing](sharing.md)) puts it in the URL fragment (`#…`), which the browser never sends to the server, so shared code stays out of server logs ([principles](../spec.md#principles)). A shared program runs only when the user starts it (Run, Debug or Memory, [security](security.md)).
 
 ## Diagnostics
 
@@ -31,6 +31,7 @@ The base of the web app: technologies, the single page, diagnostics, preferences
 
 - Language and theme follow the browser and the system. The language is matched by the browser's base tag (`es-MX` → `es`), with `en` when none matches.
 - A choice made in the UI is stored in `localStorage`, per device. When `localStorage` is unavailable, the defaults apply and choices last only until the page is closed.
+- A stored preference outside its allowed values is ignored, and its default applies.
 
 ## Saving the code
 

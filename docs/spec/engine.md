@@ -1,12 +1,13 @@
 # C engine
 
-> Part of the [playground-cc spec](../spec.md). Related: [frontend](frontend.md), [deployment](deployment.md).
+> Part of the [playground-cc spec](../spec.md). Related: [architecture](architecture.md), [worker protocol](worker-protocol.md), [limits](limits.md), [frontend](frontend.md), [deployment](deployment.md).
 
 ## Execution model
 
-- The engine is written in TypeScript and runs in a Web Worker ([frontend](frontend.md)).
+- The engine is written in TypeScript and runs in a Web Worker in the browser, and in Node in the tests ([architecture](architecture.md#components)).
 - **Resumable interpreter**: all execution state (call frames, values, the current position in the program) lives in the engine's own data structures, never in the JavaScript call stack. Execution advances in steps and can pause between any two steps and resume later from the same point.
-- **A step** is one operation of the program: evaluating one operator, one statement's control transfer, one call or one return. A library function charges one step per byte or element it processes (`memcpy`, `strlen`, `printf`'s output, each comparison of `qsort`), and runs across slices like any other code, so a large call neither escapes the step budget nor delays Stop.
+- **A step** is one operation of the program: evaluating one operator, one statement's control transfer, one call or one return. A library function charges one step per byte or element it processes (`memcpy`, `strlen`, `printf`'s output, each comparison of `qsort`), and runs across slices like any other code, so a large call neither escapes the step budget nor delays Stop. Copying, zeroing or initializing memory charges one step per byte the same way: assigning a struct or union, passing or returning one by value, and an array, struct or union initializer. Creating a block is one step whatever its size: an unwritten block (a local, `malloc`'s) has no per-byte state until it is written, and a zeroed one (a global or `static` variable) reads as zeros without per-byte state until it is written ([memory](memory.md#blocks)).
+- **Work follows the steps**: no operation does work out of proportion to the steps it charges (`strtod` keeps only the digits that can change its result, and a run of unwritten bytes is never walked byte by byte), and building a memory view snapshot or a debugger answer does work in proportion to what it shows.
 - Every feature that needs to stop the program uses that same pause:
   - **Interactive `stdin`**: when a read needs input that has not arrived, the engine pauses and the Worker asks the main thread for it with a message ([worker protocol](worker-protocol.md)); when the text arrives, execution resumes where it stopped.
   - **Stepping** (1.0): the [debugger](debugger.md) and the [memory view](memory-view.md) pause between steps and read the paused state.
@@ -14,4 +15,10 @@
   - **Execution budgets**: counted in steps. Using up the step budget ([limits](limits.md)) stops the run with `limit.steps`.
   - **Output limit**: the program's total output has a size in bytes ([limits](limits.md)). A write that would pass it stops the run with `limit.output`, so a program printing in a loop cannot flood the console before the step budget runs out. The engine checks it on each write, so the cut is the same on every run and in the oracle tests.
 - Threads (planned, [roadmap](roadmap.md#in-the-roadmap)) must fit this model: each thread is one more set of execution state, and the engine's scheduler decides which one takes the next step.
-- No `SharedArrayBuffer` or `Atomics.wait`, so the site needs no cross-origin isolation headers (COOP/COEP) ([deployment](deployment.md)).
+- No `SharedArrayBuffer` or `Atomics.wait`, so the site needs no cross-origin isolation (no `Cross-Origin-Embedder-Policy`); it sends `Cross-Origin-Opener-Policy` only to cut references between windows ([security](security.md#headers)).
+
+## Before the run
+
+- **Preprocessing, parsing and checking advance in steps too**: one step per token read or produced by macro expansion, per byte of a token built by `##`, `#` or the concatenation of adjacent string literals, per syntax node built or checked, and per type node compared or built (checking compatibility, building a composite type), each charged before the work is done, so a short source whose macros or `typedef`s grow exponentially reaches `limit.steps` before it fills memory or freezes the Worker. They are charged to the same step budget as the run and run in slices like it ([architecture](architecture.md#components)), so Stop works before the program starts, and a source built to be slow to process ends with `limit.steps` instead of freezing the Worker.
+- **Nesting has a depth limit** ([limits](limits.md#run-limits)): expressions, statements or declarators nested deeper, or a type nested deeper once its `typedef`s are resolved (struct and union members held by value, arrays, pointers, function parameters and return types; a pointer to a struct or union stops there, without entering its members, so `struct node *next` is one level), stop with `limit.nesting`, so no source can exhaust the JavaScript stack of a recursive parser, checker, debugger or memory view.
+- These steps are not the program's: `clock` does not count them ([libc](libc.md#determinism)), and the debugger and the memory view pause only after them.

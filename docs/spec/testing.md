@@ -34,6 +34,7 @@ The kinds of tests, the oracle tests against GCC and Clang, and CI. All of this 
 
 ## End-to-end tests
 
+- **Against the build**: they run on the production build served by the Compose file's pinned static-web-server image with its configuration file, headers included ([deployment](deployment.md#what-the-repository-ships)), never on `pnpm dev`; a CSP violation the page reports fails the test ([security](security.md#headers)).
 - **Minimal on purpose**: a few flows that only the real page can check, in Chromium: run a program and see its output; type input while it waits; Stop a loop; see a diagnostic in the console and its marker in the editor; reload and keep the code.
 - **Exit tests are engine and oracle tests** wherever the engine alone can check them; a phase adds an end-to-end test only for a flow that needs the page.
 - **Not tested automatically**: the look and feel of the UI (layout, the debugger, the memory view). The project owner reviews it by hand on each release, together with Firefox and Safari ([browser support](frontend.md#browser-support)).
@@ -48,10 +49,12 @@ Random programs from Csmith compared against GCC ([roadmap](roadmap.md#in-the-ro
 - **Generation** turns off what the subset lacks: `--no-jumps`, `--no-bitfields`, `--no-volatiles`, `--no-volatile-pointers`, `--no-packed-struct`, `--no-inline-function`, `--no-builtins` and `--no-argc` (floats are off by default).
 - **A runtime header of our own** replaces Csmith's (`csmith.h` and its includes): the checksum and safe-math functions written only with the subset, so no `inline`, `#pragma` or extension slips in.
 - **GCC side**: built as the oracle tests build ([oracle tests](#oracle-tests)), UBSan included; a program GCC's sanitizer reports is Csmith's fault and is discarded.
-- **Compared**: the whole `stdout` and the exit status. A run that hits a resource limit (`limit.steps`, `limit.stack`, `limit.source`) is discarded; any other diagnostic, or a difference, is a failure to investigate.
+- **Compared**: the whole `stdout` and the exit status. A run that hits a resource limit (`limit.steps`, `limit.stack`, `limit.static_data`, `limit.nesting`, `limit.source`) is discarded; any other diagnostic, or a difference, is a failure to investigate.
 
 ## CI
 
 - **On every push**: Biome, the TypeScript check, the unit, oracle, engine, robustness and end-to-end tests, the dependency license check ([licensing](licensing.md#allowed-licenses)), and `python3 docs/check_links.py`.
 - **When the corpus or the compiler image changed**, also the oracle regeneration.
+- **Hardened**: actions are pinned by commit hash, and pull requests run with a read-only token and no secrets ([security](security.md#dependencies)). The native builds of the oracle and fuzzing programs run with CPU, memory and time limits and no network.
+- The end-to-end tests also start the Compose file's static-web-server image, next to the CI container.
 - Runs on x86-64 Linux ([language](language.md#standard-and-target)) in a container image pinned by digest, which holds the GCC and Clang the expected results come from. Changing a compiler version is a change to that image, and its new expected results show in review.

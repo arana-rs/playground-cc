@@ -19,6 +19,7 @@ The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, 
 ## Editor
 
 - C highlighting, line numbers, bracket matching and automatic indentation. No autocompletion: learners type their code.
+- **Invisible characters show**: Unicode bidirectional controls (U+202A to U+202E, U+2066 to U+2069), C1 controls (U+0080 to U+009F) and other invisible format characters are drawn as visible marks, so a shared program cannot read differently from what runs.
 - **Read-only during a run**, so every range a run reports (diagnostics, stack frames, leak report) points at the code that ran.
 - Diagnostic markers ([frontend](frontend.md#diagnostics)) are cleared when the code changes or the next run starts.
 
@@ -26,7 +27,7 @@ The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, 
 
 - **Before the first run**: a hint saying how to run (the Run button, Ctrl+Enter).
 - **Cleared** when a run starts.
-- **Output** in a monospace font, wrapping long lines. There is no terminal emulation: `\n` breaks the line and `\t` advances to the next multiple of 8 columns; every other control character shows as its visible symbol (byte `0x00`–`0x1F` as U+2400 plus the byte, `0x7F` as `␡`), so `\r`, `\b` and escape sequences are never hidden effects.
+- **Output** in a monospace font, wrapping long lines. There is no terminal emulation: `\n` breaks the line and `\t` advances to the next multiple of 8 columns; every other control character shows as its visible symbol (byte `0x00`–`0x1F` as U+2400 plus the byte, `0x7F` as `␡`), so `\r`, `\b` and escape sequences are never hidden effects. Unicode bidirectional controls, C1 controls and other invisible format characters show as visible marks, as in the editor, in the output and in every diagnostic arg or debugger answer, so no text can reorder what is around it.
 - **Input echo**: each line the user sends is echoed in the console when it is sent, in a distinct style, as a terminal echoes typed-ahead input.
 - **End of a run**, after the output:
   - exited: a line with the exit status, then the [leak report](memory.md#leak-report) when there are leaks;
@@ -48,4 +49,4 @@ Where the beta features go; each one's own fragment holds its behavior.
 - **Debugger** (0.7): a Debug button next to Run; the console becomes the gdb console, with the `(gdb)` prompt in the input field, and the editor highlights the paused line ([debugger](debugger.md#session)).
 - **Memory view** (0.8): a Memory button next to Run opens a window over the page with its own stepping, and a diagnostic during a run gets a "View memory" link in the console ([memory view](memory-view.md#opening-and-closing)).
 - **Files** (0.9): tabs above the editor.
-- **Sharing, export and import** (0.11): a menu in the top bar ([sharing](sharing.md)).
+- **Sharing and export** (0.11): a menu in the top bar, which also gets import (planned) ([sharing](sharing.md)).
