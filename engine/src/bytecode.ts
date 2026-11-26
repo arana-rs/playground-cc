@@ -63,8 +63,8 @@ export type Instruction =
   | { op: 'declare'; slot: number; initialized: boolean; range: Range }
   /** The end of the scope of the locals in slots `from` to `to`: their blocks die. */
   | { op: 'leave'; from: number; to: number }
-  /** A call; `used` says whether its value is used. */
-  | { op: 'call'; fn: FunctionSymbol; args: number; used: boolean; range: Range }
+  /** A call, with its arguments' ranges; `used` says whether its value is used. */
+  | { op: 'call'; fn: FunctionSymbol; args: Range[]; used: boolean; range: Range }
   | { op: 'return'; value: boolean; range: Range }
   /** The end of a function returning `int` other than `main`, reached without `return`. */
   | { op: 'missing_return'; range: Range }
@@ -108,7 +108,7 @@ interface Jumps {
 /** The code that calls `main` and ends the run with its status (design/language.md). */
 export function startup(main: FunctionSymbol): Instruction[] {
   const range = main.definition?.declarator.nameRange as Range;
-  return [{ op: 'call', fn: main, args: 0, used: true, range }, { op: 'exit' }];
+  return [{ op: 'call', fn: main, args: [], used: true, range }, { op: 'exit' }];
 }
 
 export function compile(program: Program, fn: FunctionSymbol): Instruction[] {
@@ -490,7 +490,8 @@ class Compiler {
         const fn = this.#program.symbols.get(expression.callee);
         if (fn?.kind !== 'function') throw new Error('not a function');
         for (const [i, arg] of expression.args.entries()) this.#operand(expression, i, arg, true);
-        this.#emit({ op: 'call', fn, args: expression.args.length, used, range: expression.range });
+        const args = expression.args.map((arg) => arg.range);
+        this.#emit({ op: 'call', fn, args, used, range: expression.range });
         return;
       }
     }

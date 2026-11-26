@@ -1,0 +1,40 @@
+{
+  "output": "3 items\n",
+  "diagnostic": {
+    "code": "ub.format_mismatch",
+    "args": {
+      "conversion": "%s",
+      "type": "int"
+    },
+    "range": {
+      "file": "main.c",
+      "start": {
+        "line": 6,
+        "column": 24
+      },
+      "end": {
+        "line": 6,
+        "column": 29
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 6,
+              "column": 24
+            },
+            "end": {
+              "line": 6,
+              "column": 29
+            }
+          }
+        }
+      ],
+      "total": 1
+    }
+  }
+}

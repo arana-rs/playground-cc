@@ -13,6 +13,8 @@ export interface Limits {
   staticData: number;
   /** Stack size in bytes: a call whose frame does not fit stops the run (`limit.stack`). */
   stack: number;
+  /** Output in bytes, the run's total: a write past it stops the run (`limit.output`). */
+  output: number;
   /** Stack frames listed in a diagnostic, innermost first; the total counts them all (a display cap). */
   frames: number;
 }
@@ -25,4 +27,5 @@ export const LIMITS: Readonly<Limits> = {
   staticData: 16 * 1024 * 1024, // provisional
   stack: 8 * 1024 * 1024, // provisional
   frames: 100, // chosen
+  output: 1024 * 1024, // provisional
 };

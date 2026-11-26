@@ -10,11 +10,12 @@ import {
 } from './bytecode';
 import { type FunctionSymbol, INT_MAX, INT_MIN, type Program } from './checker';
 import { type Diagnostic, DiagnosticError, type Range, type Stack } from './diagnostic';
+import { type Argument, type LibraryCall, printf, putchar, puts, type Task } from './libc';
 import type { Limits } from './limits';
 import type { Steps } from './steps';
 
 /** A value: an `int`, a string literal's bytes as a library argument, or none yet. */
-type Value = number | Uint8Array | undefined;
+type Value = Argument | undefined;
 
 interface Frame {
   /** Its function; none for the startup code. */
@@ -39,10 +40,7 @@ interface Frame {
 const FRAME_OVERHEAD = 16;
 const INT_SIZE = 4;
 
-/** A part of the run a later step of phase 0.1 builds. */
-function later(what: string, step: string): never {
-  throw new Error(`not implemented yet: ${what} arrives in step ${step}`);
-}
+const LIBRARY: Readonly<Record<string, (call: LibraryCall) => Task>> = { printf, putchar, puts };
 
 function fail(code: Diagnostic['code'], range: Range, args: Diagnostic['args'] = {}): never {
   throw new DiagnosticError({ code, args, range });
@@ -58,6 +56,11 @@ export class Interpreter {
   readonly #values: Value[] = [];
   #stackBytes = 0;
   #status: number | undefined;
+  /** The library call in progress, which takes the next steps until it returns. */
+  #task: Task | undefined;
+  /** The output written since the last `takeOutput`, and the run's total in bytes. */
+  #output: number[] = [];
+  #outputBytes = 0;
 
   constructor(program: Program, steps: Steps, limits: Readonly<Limits>) {
     this.#program = program;
@@ -95,7 +98,22 @@ export class Interpreter {
     return { frames, total };
   }
 
+  /** The output written since the last call, as bytes. */
+  takeOutput(): Uint8Array {
+    const output = Uint8Array.from(this.#output);
+    this.#output = [];
+    return output;
+  }
+
   #execute(): void {
+    if (this.#task !== undefined) {
+      const result = this.#task.next();
+      if (result.done) {
+        this.#task = undefined;
+        this.#values.push(result.value);
+      }
+      return;
+    }
     const frame = this.#frames[this.#frames.length - 1] as Frame;
     const instruction = frame.code[frame.pc++] as Instruction;
     const values = this.#values;
@@ -255,9 +273,10 @@ export class Interpreter {
 
   #call(call: Instruction & { op: 'call' }): void {
     const { fn } = call;
-    const args = this.#values.splice(this.#values.length - call.args, call.args);
+    const count = call.args.length;
+    const args = this.#values.splice(this.#values.length - count, count);
     if (fn.definition === undefined) {
-      this.#library(fn, args);
+      this.#library(fn, args as Argument[], call);
       return;
     }
     let code = this.#code.get(fn);
@@ -284,9 +303,29 @@ export class Interpreter {
     this.#values.push(value);
   }
 
-  #library(fn: FunctionSymbol, args: Value[]): void {
-    if (fn.library?.name !== 'exit') later(`${fn.name}`, '0.0.9');
-    this.#status = exitStatus(this.#int(args[0]));
+  /** A library call: `exit` ends the run, the others run as a task over the next steps. */
+  #library(fn: FunctionSymbol, args: Argument[], call: Instruction & { op: 'call' }): void {
+    const name = fn.library?.name as string;
+    if (name === 'exit') {
+      this.#status = exitStatus(this.#int(args[0]));
+      return;
+    }
+    this.#task = (LIBRARY[name] as (call: LibraryCall) => Task)({
+      args,
+      ranges: call.args,
+      range: call.range,
+      steps: this.#steps,
+      write: (byte, range) => this.#write(byte, range),
+    });
+  }
+
+  /** One byte of output; past the output limit, the run stops (design/engine.md). */
+  #write(byte: number, range: Range): void {
+    if (this.#outputBytes >= this.#limits.output) {
+      fail('limit.output', range, { limit: this.#limits.output });
+    }
+    this.#output.push(byte);
+    this.#outputBytes++;
   }
 }
 

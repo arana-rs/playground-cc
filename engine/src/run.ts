@@ -92,7 +92,7 @@ export class Run {
 
   /** The program output written since the last call, as bytes. */
   takeOutput(): Uint8Array {
-    return new Uint8Array(0);
+    return this.#interpreter?.takeOutput() ?? new Uint8Array(0);
   }
 
   #checkSourceSize(): void {

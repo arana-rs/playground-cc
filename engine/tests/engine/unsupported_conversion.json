@@ -1,0 +1,39 @@
+{
+  "output": "Progress: 50",
+  "diagnostic": {
+    "code": "unsupported.conversion",
+    "args": {
+      "conversion": "%%"
+    },
+    "range": {
+      "file": "main.c",
+      "start": {
+        "line": 4,
+        "column": 10
+      },
+      "end": {
+        "line": 4,
+        "column": 28
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 4,
+              "column": 10
+            },
+            "end": {
+              "line": 4,
+              "column": 28
+            }
+          }
+        }
+      ],
+      "total": 1
+    }
+  }
+}
