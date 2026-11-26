@@ -30,5 +30,5 @@ This spec describes the playground it aims to be. The docs site, in `docs/`, des
 ## Hosting
 
 - **GitHub Pages**, at `https://arana-rs.github.io/playground-cc/`. Its origin is not the playground's, so the playground keeps an origin of its own ([deployment](deployment.md#hosting)).
-- **Deployed by CI** on every push to `main`. Pull requests build it but never deploy it ([testing](testing.md#ci), [security](security.md#dependencies)).
+- **Deployed by CI** on pushes to `main` that change `docs/`, the workspace's root files or its workflow. No other push or pull request builds or deploys it ([testing](testing.md#ci), [security](security.md#dependencies)).
 - **No custom headers**: GitHub Pages cannot set response headers. The docs site holds no user code or data, so the playground's headers and CSP do not apply to it ([security](security.md#headers)).

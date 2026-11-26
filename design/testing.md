@@ -53,9 +53,9 @@ Random programs from Csmith compared against GCC ([roadmap](roadmap.md#in-the-ro
 
 ## CI
 
-- **On every push**: Biome, the TypeScript check, the unit, oracle, engine, robustness and end-to-end tests, the dependency license check ([licensing](licensing.md#allowed-licenses)), the docs site build ([docs site](docs-site.md)), and `python3 design/check_links.py`.
+- **On every push**: Biome, the TypeScript check, the unit, oracle, engine, robustness and end-to-end tests, the dependency license check ([licensing](licensing.md#allowed-licenses)), and `python3 design/check_links.py`.
 - **When the corpus or the compiler image changed**, also the oracle regeneration.
-- **On pushes to `main`**, also the docs site deploy to GitHub Pages ([docs site](docs-site.md#hosting)).
+- **On pushes to `main` that change the docs site**, its build and deploy to GitHub Pages ([docs site](docs-site.md#hosting)).
 - **Hardened**: actions are pinned by commit hash, and pull requests run with a read-only token and no secrets ([security](security.md#dependencies)). The native builds of the oracle and fuzzing programs run with CPU, memory and time limits and no network.
 - The end-to-end tests also start the Compose file's static-web-server image, next to the CI container.
 - Runs on x86-64 Linux ([language](language.md#standard-and-target)) in a container image pinned by digest, which holds the GCC and Clang the expected results come from. Changing a compiler version is a change to that image, and its new expected results show in review.
