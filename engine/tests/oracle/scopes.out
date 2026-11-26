@@ -1,0 +1,7 @@
+inner x = 2
+innermost x = 3
+outer x = 1
+loop x = 10
+loop x = 11
+twice(x) = 2, x = 1
+y = 5

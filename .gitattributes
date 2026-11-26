@@ -1,0 +1,2 @@
+# Oracle expected output is compared byte for byte (design/testing.md#oracle-tests).
+engine/tests/oracle/*.out -text

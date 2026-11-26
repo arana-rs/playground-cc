@@ -1,0 +1,19 @@
+is_even(10) = 1, is_odd(7) = 1
+gcd(1071, 462) = 21
+ackermann(2, 3) = 9
+disk 1: 1 -> 2
+disk 2: 1 -> 3
+disk 1: 2 -> 3
+disk 3: 1 -> 2
+disk 1: 3 -> 1
+disk 2: 3 -> 2
+disk 1: 1 -> 2
+disk 4: 1 -> 3
+disk 1: 2 -> 3
+disk 2: 2 -> 1
+disk 1: 3 -> 1
+disk 3: 2 -> 3
+disk 1: 1 -> 2
+disk 2: 1 -> 3
+disk 1: 2 -> 3
+moves = 15

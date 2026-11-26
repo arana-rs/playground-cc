@@ -42,5 +42,5 @@ Every limit of a run, the Worker's tuning values, how each value is chosen, and 
 
 | Value | Unit | Value | Criterion | Rule |
 |---|---|---|---|---|
-| Slice size | steps | Set by measuring | The steps the reference runs in about 10 ms, so Stop and input are answered at once and the message overhead stays small | [architecture](architecture.md#components) |
-| Stop timeout | milliseconds | Set by measuring | Well above the slowest slice on the reference, so only a stuck Worker reaches it | [architecture](architecture.md#components) |
+| Slice size | steps | 50,000 (provisional) | The steps the reference runs in about 10 ms, so Stop and input are answered at once and the message overhead stays small | [architecture](architecture.md#components) |
+| Stop timeout | milliseconds | 2,000 (provisional) | Well above the slowest slice on the reference, so only a stuck Worker reaches it | [architecture](architecture.md#components) |

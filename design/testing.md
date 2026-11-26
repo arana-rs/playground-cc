@@ -11,6 +11,7 @@ The kinds of tests, the oracle tests against GCC and Clang, and CI. All of this 
 | Unit | Vitest | `engine/`, `web/` | Each part on its own: lexer, parser, checker, interpreter, library (`time` and `clock` included, [libc](libc.md#determinism)), UI components |
 | Oracle | Vitest, plus GCC and Clang | `engine/tests/oracle/` | A program prints what GCC and Clang print ([oracle tests](#oracle-tests)) |
 | Engine | Vitest | `engine/tests/engine/` | A program ends exactly as expected where no native build can say: a diagnostic, a leak report ([engine tests](#engine-tests)) |
+| Robustness | Vitest | `engine/tests/robustness/` | The engine never throws, whatever the source ([robustness](#robustness)) |
 | End-to-end | Playwright, in Chromium | `web/e2e/` | A minimal smoke suite through the real page and Worker ([end-to-end tests](#end-to-end-tests)) |
 
 - **Cases arrive with their phase**: a case is added in the phase that implements what it uses, so every case in the repo passes.
@@ -19,8 +20,9 @@ The kinds of tests, the oracle tests against GCC and Clang, and CI. All of this 
 ## Oracle tests
 
 - **A case** is a program, optionally its input (`name.in`), and the expected result: the bytes written to `stdout` (`name.out`) and the exit status (`name.status`).
-- **Expected results come from native builds**, never written by hand. A script builds each program with GCC and with Clang, with `-std=c17 -pedantic-errors -Wall -Wextra -Werror` and `-lm`, at `-O0` and at `-O2`, runs each build with `name.in` as `stdin` and `argv[0]` set to `main` ([language](language.md#supported-by-phase)), and writes the result. All four builds must agree and write nothing to `stderr`, or the case is rejected: a disagreement means the output depends on undefined or unspecified behavior.
-- **Proven free of undefined behavior**: two more builds must run without a report, one with `-fsanitize=address,undefined` and one with Clang's `-fsanitize=memory`, which catches uninitialized reads.
+- **Expected results come from native builds**, never written by hand. A script (`engine/tests/oracle/generate.sh`) builds each program with GCC and with Clang, with `-std=c17 -pedantic-errors -Wall -Wextra -Werror` and `-lm`, at `-O0` and at `-O2`, runs each build with `name.in` as `stdin` and `argv[0]` set to `main` ([language](language.md#supported-by-phase)), and writes the result. All four builds must agree and write nothing to `stderr`, or the case is rejected: a disagreement means the output depends on undefined or unspecified behavior.
+- **Proven free of undefined behavior**: two more builds, both with Clang at `-O1` and with `-fno-sanitize-recover=all`, must run without a report and give the same results: one with `-fsanitize=address,undefined` and one with `-fsanitize=memory`, which catches uninitialized reads.
+- **The compiler image** (`engine/tests/oracle/Dockerfile`) holds GCC 14 and Clang 19 from Debian 13: its base is pinned by digest and its packages, at exact versions, come from a fixed snapshot of the Debian archive, so every build of it has the same compilers. The script builds it and runs inside it, with no network and with CPU, memory and time limits.
 - **The engine side** runs the program in Node with `name.in` as the input followed by end of input, and must give the same bytes and exit status. It also runs it twice and must give identical results ([principles](README.md#principles)).
 - **What a case avoids**: printing addresses ([memory](memory.md#pointers)), depending on evaluation order ([language](language.md#standard-and-target)) or on the order of equal elements in `qsort`, printing transcendental math results to the last digit ([libc](libc.md#math)), and calling `time` or `clock`.
 - The expected files are committed, so the tests run without a compiler. CI regenerates them, and fails if any differs, whenever the corpus or the compiler image changes.
@@ -43,6 +45,7 @@ The kinds of tests, the oracle tests against GCC and Clang, and CI. All of this 
 ## Robustness
 
 - A property test feeds the engine random and mutated sources (from the corpus, cut and recombined), with a small step budget, and checks that the engine never throws: every run ends in an exit or a diagnostic, never in what the Worker would report as `engine.internal` ([architecture](architecture.md#components)).
+- **Reproducible**: the sources come from a seeded generator, and a failure names its seed and its source. The corpus is every oracle and engine test program; the step budget is 20,000 and slices are of random sizes, so pausing is exercised too.
 
 ## Differential fuzzing (planned)
 
