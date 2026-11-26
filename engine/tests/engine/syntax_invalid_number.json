@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.invalid_number",
+    "args": { "number": "09" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 11 },
+      "end": { "line": 2, "column": 13 }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.invalid_escape",
+    "args": { "escape": "\\q" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 4, "column": 13 },
+      "end": { "line": 4, "column": 15 }
+    }
+  }
+}

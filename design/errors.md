@@ -25,6 +25,17 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 | `unsupported.function` | Before the run: the program uses a C17 standard library function outside the subset; carries `name` | [libc](libc.md#headers-and-functions) |
 | `unsupported.header` | Before the run: a standard header outside the subset, or any other system header; carries `header` | [libc](libc.md#headers-and-functions) |
 | `directive.error` | Before the run: an `#error` directive; carries `message`, its tokens as written | [language](language.md#supported-by-phase) |
+| `syntax.unterminated_comment` | Before the run: a comment that never ends | [language](language.md#checks) |
+| `syntax.unterminated_char` | Before the run: a character constant with no closing `'` | [language](language.md#checks) |
+| `syntax.unterminated_string` | Before the run: a string literal with no closing `"` | [language](language.md#checks) |
+| `syntax.stray_character` | Before the run: a character that starts no token; carries `character` | [language](language.md#checks) |
+| `syntax.invalid_identifier_character` | Before the run: a character not allowed in an identifier, or not at its start; carries `character` | [language](language.md#checks) |
+| `syntax.invalid_ucn` | Before the run: an incomplete or forbidden universal character name; carries `ucn` | [language](language.md#checks) |
+| `syntax.invalid_escape` | Before the run: an unknown escape sequence; carries `escape` | [language](language.md#checks) |
+| `syntax.escape_out_of_range` | Before the run: an octal or hex escape past a byte; carries `escape` | [language](language.md#checks) |
+| `syntax.empty_char_constant` | Before the run: an empty character constant | [language](language.md#checks) |
+| `syntax.invalid_number` | Before the run: a malformed number; carries `number` | [language](language.md#checks) |
+| `syntax.constant_too_large` | Before the run: an integer constant too large for every type; carries `number` | [language](language.md#checks) |
 | `limit.steps` | During or before the run: the program, or the steps before it, used up the step budget; carries `limit`, the budget | [engine](engine.md#execution-model) |
 | `ub.division_by_zero` | During the run: integer division or remainder by zero | [language](language.md#undefined-behavior) |
 | `ub.uninitialized_read` | During the run: reading a value with bytes never written; carries `name` for a variable | [memory](memory.md#blocks) |

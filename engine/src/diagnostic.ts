@@ -1,7 +1,26 @@
 // A diagnostic is data, never text: the UI turns it into a message (design/errors.md#format).
 
+/** The syntax errors found so far; each one has its row in design/language.md#checks. */
+export type SyntaxCode =
+  | 'syntax.unterminated_comment'
+  | 'syntax.unterminated_char'
+  | 'syntax.unterminated_string'
+  | 'syntax.stray_character'
+  | 'syntax.invalid_identifier_character'
+  | 'syntax.invalid_ucn'
+  | 'syntax.invalid_escape'
+  | 'syntax.escape_out_of_range'
+  | 'syntax.empty_char_constant'
+  | 'syntax.invalid_number'
+  | 'syntax.constant_too_large';
+
 /** Every diagnostic code in use so far; each one has its row in design/errors.md. */
-export type DiagnosticCode = 'engine.internal' | 'limit.source' | 'limit.steps';
+export type DiagnosticCode =
+  | SyntaxCode
+  | 'unsupported.construct'
+  | 'engine.internal'
+  | 'limit.source'
+  | 'limit.steps';
 
 /** A place in a file: 1-based line and column, the column in UTF-16 code units. */
 export interface Position {

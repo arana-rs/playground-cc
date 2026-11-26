@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.invalid_ucn",
+    "args": { "ucn": "\\u0041" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 4, "column": 9 },
+      "end": { "line": 4, "column": 15 }
+    }
+  }
+}

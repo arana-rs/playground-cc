@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.stray_character",
+    "args": { "character": "$" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 7 },
+      "end": { "line": 2, "column": 8 }
+    }
+  }
+}

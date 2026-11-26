@@ -1,7 +1,9 @@
 import { type Diagnostic, DiagnosticError } from './diagnostic';
+import { Lexer } from './lexer';
 import type { Limits } from './limits';
 import { SourceFile, utf8Length } from './source';
 import { Steps } from './steps';
+import { TokenStream } from './tokens';
 
 export interface SourceInput {
   name: string;
@@ -28,6 +30,7 @@ export class Run {
   readonly #steps: Steps;
   readonly #files: SourceFile[];
   readonly #limits: Readonly<Limits>;
+  #tokens: TokenStream | undefined;
   #end: RunEnd | undefined;
 
   constructor(options: RunOptions) {
@@ -36,14 +39,30 @@ export class Run {
     this.#steps = new Steps(options.limits.steps);
   }
 
-  advance(_maxSteps: number): RunState {
+  /** Advances the run by about `maxSteps` steps: one piece of work may take it a little past. */
+  advance(maxSteps: number): RunState {
     if (this.#end === undefined) {
       try {
-        this.#checkSourceSize();
-        throw new Error('not implemented yet: the lexer arrives in step 0.0.3');
+        if (this.#tokens === undefined) {
+          this.#checkSourceSize();
+          // One file until 0.9 (design/worker-protocol.md).
+          const file = this.#files[0];
+          if (file === undefined) throw new Error('a run needs a file');
+          this.#tokens = new TokenStream(new Lexer(file, this.#steps), this.#steps);
+        }
+        const stop = this.#steps.used + maxSteps;
+        while (this.#steps.used < stop) {
+          if (this.#tokens.next().kind === 'eof') {
+            throw new Error('not implemented yet: the preprocessor arrives in step 0.0.4');
+          }
+        }
+        return { state: 'running' };
       } catch (error) {
         if (!(error instanceof DiagnosticError)) throw error;
-        this.#end = { reason: 'diagnostic', diagnostic: error.diagnostic };
+        this.#end = {
+          reason: 'diagnostic',
+          diagnostic: cutArgs(error.diagnostic, this.#limits.text),
+        };
       }
     }
     return { state: 'ended', end: this.#end };
@@ -61,4 +80,19 @@ export class Run {
       throw new DiagnosticError({ code: 'limit.source', args: { limit: this.#limits.source } });
     }
   }
+}
+
+/** The diagnostic with each string arg longer than `length` characters cut to that length, `…` last. */
+function cutArgs(diagnostic: Diagnostic, length: number): Diagnostic {
+  const args = Object.fromEntries(
+    Object.entries(diagnostic.args).map(([name, value]) => {
+      if (typeof value !== 'string') return [name, value];
+      const characters = Array.from(value);
+      return [
+        name,
+        characters.length > length ? `${characters.slice(0, length - 1).join('')}…` : value,
+      ];
+    }),
+  );
+  return { ...diagnostic, args };
 }

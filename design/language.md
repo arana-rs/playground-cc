@@ -11,6 +11,7 @@ The C the engine accepts: the standard, the target platform, what is supported i
 - **Constraint violations are errors**: whatever C17 requires a diagnostic for stops the program before it starts, even where GCC only warns (calling an undeclared function, for example). Those codes (areas `syntax`, `name`, `type`) are added as each check is built, each with its row in [checks](#checks) and in [errors](errors.md).
 - **Order of evaluation**: where C17 leaves it unspecified (operands, function arguments), the engine evaluates left to right. A program whose output depends on that order is outside the GCC and Clang guarantee ([principles](README.md#principles)).
 - **Character set**: source and execution character set are UTF-8, as in GCC; a non-ASCII character in a string literal takes its UTF-8 bytes.
+- **Line breaks**: `\n` is the only one, the one the editor writes; a `\r` is whitespace, like a tab, so a `\` before `\r\n` splices no line. Diagnostic ranges count lines the same way ([errors](errors.md#format)).
 - **Empty parentheses**: `()` in a function declaration or definition means no parameters, like `(void)`; calling such a function with arguments is an error. Old-style (K&R) definitions are not supported.
 
 ## Types
@@ -118,3 +119,19 @@ Each detected undefined behavior stops the program during the run with its code 
 ## Checks
 
 Each check of a constraint violation before the run ([standard and target](#standard-and-target)) gets a row here, in a table of its code and what it checks, when the check is built; each code also has its row in [errors](errors.md).
+
+| Code | Check |
+|---|---|
+| `syntax.unterminated_comment` | A `/*` comment with no `*/` before the end of the file; the range is the `/*` |
+| `syntax.unterminated_char` | A `'` with no closing `'` on its line; the range runs to the end of the line |
+| `syntax.unterminated_string` | A `"` with no closing `"` on its line; the range runs to the end of the line |
+| `syntax.stray_character` | A character that starts no token (`$`, `@`, `` ` ``, a `\` outside a literal, a character not allowed in identifiers); carries `character` |
+| `syntax.invalid_identifier_character` | A universal character name in an identifier outside C17 Annex D.1, or an identifier starting with a character of Annex D.2; carries `character`, as written. UTF-8 characters of Annex D.1 are accepted in identifiers, as GCC does |
+| `syntax.invalid_ucn` | A universal character name that is incomplete or names a character C17 6.4.3 forbids (below U+00A0 except `$`, `@` and `` ` ``, a surrogate, past U+10FFFF); carries `ucn` |
+| `syntax.invalid_escape` | A backslash in a literal followed by no escape sequence (`\q`, `\x` with no digit); carries `escape` |
+| `syntax.escape_out_of_range` | An octal or hex escape whose value does not fit in an `unsigned char`; carries `escape` |
+| `syntax.empty_char_constant` | `''` |
+| `syntax.invalid_number` | A number that is neither an integer nor a floating constant (`09`, `1x`, `0x`, `1e`, `1lL`); carries `number` |
+| `syntax.constant_too_large` | An integer constant no type of its list holds (C17 6.4.4.1); carries `number` |
+
+- **Character constants** get the value GCC gives them: one byte is a signed `char`; several (`'ab'`, a non-ASCII character) make an `int` with each byte shifted in, the last four kept.

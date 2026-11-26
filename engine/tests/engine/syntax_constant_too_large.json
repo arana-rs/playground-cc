@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.constant_too_large",
+    "args": { "number": "99999999999999999999" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 11 },
+      "end": { "line": 2, "column": 31 }
+    }
+  }
+}

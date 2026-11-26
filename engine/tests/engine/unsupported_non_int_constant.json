@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "unsupported.construct",
+    "args": { "construct": "non_int_constant" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 11 },
+      "end": { "line": 2, "column": 14 }
+    }
+  }
+}

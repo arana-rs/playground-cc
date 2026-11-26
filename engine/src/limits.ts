@@ -5,9 +5,12 @@ export interface Limits {
   steps: number;
   /** Source size in UTF-8 bytes, all files together (`limit.source`). */
   source: number;
+  /** Text length in characters: longer diagnostic string args are cut with `…` (a display cap). */
+  text: number;
 }
 
 export const LIMITS: Readonly<Limits> = {
   steps: 100_000_000, // provisional
   source: 256 * 1024, // provisional
+  text: 200, // chosen
 };

@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.unterminated_char",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 11 },
+      "end": { "line": 2, "column": 14 }
+    }
+  }
+}
