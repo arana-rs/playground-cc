@@ -6,7 +6,7 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 
 ## Format
 
-- **A diagnostic is data, never text**: `code`, `args`, `range`, and `stack` for those raised during the run; `range` and `stack` are left out when no source location applies, as in `engine.internal`. The engine never produces message text; the UI turns a diagnostic into a message with the message catalogs ([architecture](architecture.md#components)).
+- **A diagnostic is data, never text**: `code`, `args`, `range`, and `stack` for those raised during the run; `range` and `stack` are left out when no source location applies, as in `engine.internal`, `limit.source` and `limit.static_data`. The engine never produces message text; the UI turns a diagnostic into a message with the message catalogs ([architecture](architecture.md#components)).
 - **Code**: `area.reason`, lower case, the reason in snake case. A code never changes meaning; a new meaning gets a new code.
 - **Args**: named values, strings or numbers, that fill the placeholders of the code's message. Identifiers, types and source text go as written in C (`count`, `unsigned long`), never translated; only fixed keys, like `construct`, are translated. A type is written with its `typedef` names, never expanded, as GCC writes it, everywhere a type is shown, except `ptype`, which expands only its outer level ([debugger](debugger.md#commands)). A string arg longer than the text length limit is cut with `…` ([limits](limits.md#run-limits)).
 - **Range**: the file name, and the start and end line and column, 1-based. The end is exclusive, so a range where start equals end marks a point (the end of the file, for example). Columns count UTF-16 code units, the unit of JavaScript strings and of the editor.
@@ -15,7 +15,7 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 - **Before the run** (preprocessing, parsing, checking): only the first diagnostic found is reported, and the program does not start.
 - **During the run**: the diagnostic stops the program between two steps ([engine](engine.md#execution-model)). The output written before it stays in the console, even where a native program would have lost its buffered output.
 - **Translation**: each code has one message in each catalog (`es`, `en`), with placeholders named after its args. A code without a message shows a generic message with the code.
-- Codes for syntax, name and type errors are added as each check is built ([language](language.md#standard-and-target)).
+- Codes for syntax, name and type errors are added as each check is built ([language](language.md#checks)).
 
 ## Codes
 
@@ -24,6 +24,7 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 | `unsupported.construct` | Before the run: a C construct the engine does not support; carries `construct`, a fixed key the catalogs translate (`goto`, `vla`), and its range covers the whole construct. Also answers a construct whose phase has not been released yet | [language](language.md#not-supported) |
 | `unsupported.function` | Before the run: the program uses a C17 standard library function outside the subset; carries `name` | [libc](libc.md#headers-and-functions) |
 | `unsupported.header` | Before the run: a standard header outside the subset, or any other system header; carries `header` | [libc](libc.md#headers-and-functions) |
+| `directive.error` | Before the run: an `#error` directive; carries `message`, its tokens as written | [language](language.md#supported-by-phase) |
 | `limit.steps` | During or before the run: the program, or the steps before it, used up the step budget; carries `limit`, the budget | [engine](engine.md#execution-model) |
 | `ub.division_by_zero` | During the run: integer division or remainder by zero | [language](language.md#undefined-behavior) |
 | `ub.uninitialized_read` | During the run: reading a value with bytes never written; carries `name` for a variable | [memory](memory.md#blocks) |

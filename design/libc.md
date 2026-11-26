@@ -8,7 +8,7 @@ The subset of the C17 standard library the engine provides, and how it behaves. 
 
 | Phase | Header | Contents |
 |---|---|---|
-| 0.1 | `<stdio.h>` | `printf` (`%d` and `%s`), `putchar`, `puts`, `EOF` |
+| 0.1 | `<stdio.h>` | `printf` (`%d` and `%s`, [printf](#printf)), `putchar`, `puts`, `EOF` |
 | 0.1 | `<stdlib.h>` | `exit`, `EXIT_SUCCESS`, `EXIT_FAILURE` |
 | 0.2 | `<stdio.h>` | Every `printf` conversion ([printf](#printf)) |
 | 0.2 | `<stdbool.h>`, `<limits.h>`, `<stdint.h>`, `<stddef.h>`, `<float.h>` | Their types and macros (`bool`, `INT_MAX`, `int32_t`, `size_t`, `DBL_EPSILON`…); `offsetof` from 0.5 |
@@ -26,10 +26,11 @@ The subset of the C17 standard library the engine provides, and how it behaves. 
 
 ## printf
 
+- **Conversions in 0.1**: only `%d` and `%s`, with no flags, width, precision or length modifier. Any other valid C17 conversion, `%%` included, and any of those on `%d` or `%s`, stops with `unsupported.conversion`.
 - **Conversions**: from 0.2, every C17 conversion except `%n` and the `L` modifier (no `long double`): `d`, `i`, `u`, `o`, `x`, `X`, `c`, `s`, `p`, `f`, `F`, `e`, `E`, `g`, `G`, `a`, `A` and `%%`, with the flags `-`, `+`, space, `#` and `0`, width and precision (`*` included), and the length modifiers `hh`, `h`, `l`, `ll`, `j`, `z` and `t`.
 - **Same bytes as glibc**: floating-point conversions print the exact decimal value of the binary number, rounded half to even, as glibc does. JavaScript's `toFixed` and `toPrecision` round ties up, so they are not used. `%a` prints the normalized form (`0x1.8p+1`). Infinity and NaN print as `inf` and `nan` (with a sign when negative, `-nan` included), uppercase for `F`, `E`, `G` and `A`. `%p` prints `0x` and lowercase hex, and `(nil)` for a null pointer.
 - **Width and precision** are checked against the output limit before the conversion is built: a conversion that would take the output past it stops with `limit.output` at once, so `printf("%999999999d", 1)` never builds its text ([engine](engine.md#execution-model)).
-- **Format checks** (during the run, when the call executes): an argument whose type does not match its conversion (`printf("%d", 2.5)`) stops with `ub.format_mismatch`; fewer arguments than conversions with `ub.format_missing_argument`; a malformed conversion (`%y`) with `ub.format_invalid`. A valid C17 conversion outside the subset (`%n`, `%Lf`) is not undefined behavior: it stops with `unsupported.conversion`. Extra arguments are evaluated and ignored, as C17 allows.
+- **Format checks** (from 0.1, during the run, when the call executes): an argument whose type does not match its conversion (`printf("%d", "hi")`) stops with `ub.format_mismatch`; fewer arguments than conversions with `ub.format_missing_argument`; a malformed conversion (`%y`) with `ub.format_invalid`. A valid C17 conversion outside the subset (`%n`, `%Lf`) is not undefined behavior: it stops with `unsupported.conversion`. Extra arguments are evaluated and ignored, as C17 allows.
 
 ## Input
 

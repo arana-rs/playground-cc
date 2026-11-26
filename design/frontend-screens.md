@@ -32,8 +32,8 @@ The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, 
 - **End of a run**, after the output:
   - exited: a line with the exit status, then the [leak report](memory.md#leak-report) when there are leaks;
   - stopped: a line saying so;
-  - diagnostic: its message, its range and, during the run, its call stack and from 0.8 (1.0) a "View memory" link ([memory view](memory-view.md#opening-and-closing)).
-- **Links**: every range in the console (a diagnostic's, each stack frame's, each leaked block's allocation) moves the editor to that place ([errors](errors.md#format)).
+  - diagnostic: its message, its range when it has one and, during the run, its call stack and from 0.8 (1.0) a "View memory" link ([memory view](memory-view.md#opening-and-closing)).
+- **Links**: every range in the console (a diagnostic's, each stack frame's, each leaked block's allocation) moves the editor to that place ([errors](errors.md#format)). Until 0.9 (1.0) a range shows as its line and column, without the file name.
 - **Copying**: the output can be selected as text, and a copy button copies exactly what the program wrote, without echo or end lines.
 - **Scrolling** follows new output, unless the user has scrolled up.
 

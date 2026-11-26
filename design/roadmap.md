@@ -16,20 +16,21 @@ Every phase keeps the tests of the earlier ones green: a phase is done when its 
 
 **0.1 Walking skeleton**
 - Editor, Run button and output console; the engine runs in a Web Worker ([engine](engine.md#execution-model))
-- Minimal C: `int`, operators, `if`, `while`, `do`, `for`, `switch`, `break`, `continue`, functions and recursion ([language](language.md#supported-by-phase)); `printf` with `%d` and `%s`, `putchar`, `puts` and `exit` ([libc](libc.md#headers-and-functions))
+- The rest of the page as [frontend](frontend.md) and [frontend screens](frontend-screens.md) describe it, except what a later phase adds (the input field, the leak report, saving the code); the license check and the notices ([licensing](licensing.md))
+- Minimal C: `int`, operators, `if`, `while`, `do`, `for`, `switch`, `break`, `continue`, functions and recursion ([language](language.md#supported-by-phase)); `printf` with `%d` and `%s` and its format checks ([libc](libc.md#printf)), `putchar`, `puts` and `exit` ([libc](libc.md#headers-and-functions))
 - Explicit diagnostic for every unsupported construct ([language](language.md#not-supported))
-- Undefined behavior detected: division by zero, reading an uninitialized variable, unsequenced modifications (`i = i++`), using the value of a function that ended without `return` ([language](language.md#undefined-behavior))
+- Undefined behavior detected: division by zero, signed integer overflow, reading an uninitialized variable, unsequenced modifications (`i = i++`), using the value of a function that ended without `return` ([language](language.md#undefined-behavior))
 - Stop, and the step budget (before the run too), stack size, static data size, output limit, source size and nesting depth, with provisional values ([limits](limits.md))
 - i18n (`es`, `en`) from the first string; dark and light mode
 - Deployment with static-web-server ([deployment](deployment.md))
 - Test infrastructure: the oracle and engine tests, a minimal end-to-end smoke suite with Playwright, and CI running every test on each change ([testing](testing.md))
-- Exit tests: hello world; a recursive Fibonacci prints what GCC prints; an infinite loop is ended by Stop and by the step budget; an unsupported construct shows its diagnostic; each undefined behavior in the list stops with its diagnostic
+- Exit tests: hello world; a recursive Fibonacci prints what GCC prints; an infinite loop is ended by Stop and by the step budget; an unsupported construct shows its diagnostic; each undefined behavior in the list, and each `printf` format check, stops with its diagnostic
 
 **0.2 Types and expressions**
 - Every integer type with the LP64 conversions, `char`, `float` and `double`; bitwise operators, `sizeof`, global variables, `static` and `const`
-- Every `printf` conversion, with its format checks ([libc](libc.md#printf)); `<stdbool.h>`, `<limits.h>`, `<stdint.h>`, `<stddef.h>` and `<float.h>`
+- Every `printf` conversion ([libc](libc.md#printf)); `<stdbool.h>`, `<limits.h>`, `<stdint.h>`, `<stddef.h>` and `<float.h>`
 - `#define` constants
-- Undefined behavior detected: signed integer overflow, invalid shifts, out-of-range floating-point to integer conversions
+- Undefined behavior detected: invalid shifts, out-of-range floating-point to integer conversions
 - Exit tests: integer promotions and conversions print what GCC prints; each undefined behavior in the list stops with its diagnostic
 
 **0.3 Arrays, pointers and strings**

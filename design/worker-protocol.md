@@ -16,7 +16,7 @@ The messages between the UI on the main thread and the Worker loop ([architectur
 
 | Type | Fields | Meaning |
 |---|---|---|
-| `run` | `runId`, `files` (each a `name` and its `text`) | Start a run. One file until 0.9 (1.0) |
+| `run` | `runId`, `files` (each a `name` and its `text`) | Start a run. One file, named `main.c`, until 0.9 (1.0) |
 | `input` | `runId`, `text` | One line the user sent, without its newline; the Worker adds `\n` ([libc](libc.md#input)). Lines sent before the program reads them wait in order |
 | `end_input` | `runId` | The end-of-input action: once the lines already sent are read, reads return `EOF` |
 | `stop` | `runId` | End the run between two steps |

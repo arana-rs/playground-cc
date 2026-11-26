@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    // No DOM, Worker or Node types: the engine uses no platform API (design/architecture.md).
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src"]
+}

@@ -8,7 +8,7 @@ The C the engine accepts: the standard, the target platform, what is supported i
 
 - **Standard**: C17 (ISO/IEC 9899:2018), with no GNU or other extensions.
 - **Target**: x86-64 Linux with the System V ABI (LP64). Every implementation-defined behavior is what GCC does there; the oracle tests run on that platform.
-- **Constraint violations are errors**: whatever C17 requires a diagnostic for stops the program before it starts, even where GCC only warns (calling an undeclared function, for example). Those codes (areas `syntax`, `name`, `type`) are added to [errors](errors.md) as each check is built.
+- **Constraint violations are errors**: whatever C17 requires a diagnostic for stops the program before it starts, even where GCC only warns (calling an undeclared function, for example). Those codes (areas `syntax`, `name`, `type`) are added as each check is built, each with its row in [checks](#checks) and in [errors](errors.md).
 - **Order of evaluation**: where C17 leaves it unspecified (operands, function arguments), the engine evaluates left to right. A program whose output depends on that order is outside the GCC and Clang guarantee ([principles](README.md#principles)).
 - **Character set**: source and execution character set are UTF-8, as in GCC; a non-ASCII character in a string literal takes its UTF-8 bytes.
 - **Empty parentheses**: `()` in a function declaration or definition means no parameters, like `(void)`; calling such a function with arguments is an error. Old-style (K&R) definitions are not supported.
@@ -38,7 +38,7 @@ Unmarked phases are MVP ([roadmap](roadmap.md)).
 
 | Phase | Constructs |
 |---|---|
-| 0.1 | Every C17 lexical element (comments, constants, escapes, trigraphs, digraphs, line splicing); `int` and `void`; functions with parameters and return values, recursion; local variables and block scope; arithmetic, comparison, logical, assignment and compound assignment operators, `++`, `--`, `?:` and the comma operator; `if`, `else`, `while`, `do`, `for`, `switch`, `break`, `continue`, `return`; string literals as arguments; `#include` of the supported standard headers |
+| 0.1 | Every C17 lexical element (comments, constants, escapes, trigraphs, digraphs, line splicing); `int` and `void`; functions with parameters and return values, recursion; local variables and block scope; arithmetic, comparison, logical, assignment and compound assignment operators (the bitwise ones from 0.2), `++`, `--`, `?:` and the comma operator; `if`, `else`, `while`, `do`, `for`, `switch`, `break`, `continue`, `return`; string literals as arguments of library functions; `#include` of the supported standard headers, the null directive and `#error` |
 | 0.2 | Every integer type, `_Bool`, `float`, `double`; casts, integer promotions and the usual arithmetic conversions; bitwise operators and shifts; `sizeof`, `_Alignof`, `_Static_assert`; global variables, `static` and `const`; object-like `#define` |
 | 0.3 | Arrays (multidimensional too) and their initializers; pointers, `&`, `*`, pointer arithmetic and comparison, `void *`, pointers to pointers, `NULL`; strings as `char` arrays; the `int main(int argc, char *argv[])` form |
 | 0.5 | `struct`, `union`, `enum`, `typedef`; `.` and `->`; structs assigned, passed and returned by value; designated initializers |
@@ -46,7 +46,31 @@ Unmarked phases are MVP ([roadmap](roadmap.md)).
 | 0.10 (1.0) | Function pointers |
 
 - **`main`**: `int main(void)` and `int main()` from 0.1. With the `argc`/`argv` form, `argc` is 1, `argv[0]` is a modifiable `"main"` and `argv[1]` is `NULL`, as C17 requires. Reaching the end of `main` returns 0, as C17 says. The exit status is the value returned by `main` or passed to `exit`, modulo 256, as Linux reports it.
-- **Before its phase**: a construct whose phase has not been released yet is reported like an unsupported one, with `unsupported.construct` and its keyword as the key (`struct`, `union`), or a short name when it has none (`array`, `pointer`).
+- **Constants in 0.1**: a character constant is an `int`, as C17 says. A floating constant, or an integer constant whose type is not `int` (a suffix, or a value too large for `int`), is a construct of 0.2.
+- **String literals in 0.1 and 0.2** are accepted only as arguments of a library function (`printf`, `puts`); anywhere else they are an array, a construct of 0.3.
+- **Directives**: the null directive (`#` alone) does nothing. `#error` stops before the run with `directive.error`, carrying `message`, its tokens as written (empty when there are none). `#line` is not supported.
+
+### Before its phase
+
+A construct whose phase has not been released yet is reported like an unsupported one, with `unsupported.construct` and its keyword as the key (`char`, `static`, `sizeof`, `struct`, `extern`), or one of these keys when it has none:
+
+| Key | Construct | Phase |
+|---|---|---|
+| `float_constant` | Floating constants | 0.2 |
+| `non_int_constant` | Integer constants whose type is not `int` | 0.2 |
+| `cast` | Casts | 0.2 |
+| `bitwise_operator` | Bitwise operators and shifts, their compound assignments included | 0.2 |
+| `global_variable` | Variables at file scope | 0.2 |
+| `define` | Object-like `#define` | 0.2 |
+| `array` | Arrays, their initializers, and string literals anywhere but as a library function's argument | 0.3 |
+| `pointer` | Pointer declarators, `&`, unary `*` | 0.3 |
+| `member_access` | `.` and `->` | 0.5 |
+| `designated_initializer` | Designated initializers | 0.5 |
+| `local_include` | `#include "file.h"` | 0.9 (1.0) |
+| `function_macro` | Function-like macros | 0.9 (1.0) |
+| `undef` | `#undef` | 0.9 (1.0) |
+| `conditional_directive` | `#if`, `#ifdef`, `#ifndef`, `#elif`, `#else`, `#endif`, `defined` | 0.9 (1.0) |
+| `function_pointer` | Function pointers | 0.10 (1.0) |
 
 ## Not supported
 
@@ -74,6 +98,7 @@ Each of these stops the program before it starts with `unsupported.construct` ([
 | `integer_to_pointer` | Converting an integer to a pointer, other than a null pointer constant ([memory](memory.md#pointers)) |
 | `wide_char` | Wide and Unicode character constants and strings (`L`, `u`, `U`, `u8` prefixes) |
 | `pragma` | Any `#pragma`, `#pragma once` included (header guards with `#ifndef` replace it) |
+| `line_directive` | `#line` |
 | `extension` | GNU extensions (`__attribute__`, statement expressions, `typeof`, case ranges, nested functions, zero-length arrays) |
 
 ## Undefined behavior
@@ -83,9 +108,13 @@ Each detected undefined behavior stops the program during the run with its code 
 | Phase | Undefined behavior | Code |
 |---|---|---|
 | 0.1 | Integer division or remainder by zero | `ub.division_by_zero` |
+| 0.1 | Signed integer overflow, `INT_MIN / -1` included; carries `type` | `ub.signed_overflow` |
 | 0.1 | Reading a value with bytes never written ([memory](memory.md#blocks)); carries `name` for a variable | `ub.uninitialized_read` |
 | 0.1 | Two unsequenced modifications of the same object, or a modification and an unsequenced read of it (`i = i++`, `a[i] = i++`); carries `name`. Detected even though the engine evaluates left to right | `ub.unsequenced` |
 | 0.1 | Using the value of a call to a non-`void` function that ended without `return` (`main` excepted); carries `function` | `ub.missing_return` |
-| 0.2 | Signed integer overflow, `INT_MIN / -1` included; carries `type` | `ub.signed_overflow` |
 | 0.2 | A shift by a negative count or by at least the width of the promoted left operand, or a left shift of a negative value or whose result does not fit; carries `type` | `ub.invalid_shift` |
 | 0.2 | Converting a floating-point value to an integer type that cannot hold its integer part, NaN and infinities included; carries `type` | `ub.float_conversion` |
+
+## Checks
+
+Each check of a constraint violation before the run ([standard and target](#standard-and-target)) gets a row here, in a table of its code and what it checks, when the check is built; each code also has its row in [errors](errors.md).
