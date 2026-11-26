@@ -1,6 +1,6 @@
 # Security
 
-> Part of the [playground-cc spec](README.md). Related: [deployment](deployment.md), [architecture](architecture.md), [frontend](frontend.md), [limits](limits.md), [sharing](sharing.md).
+> Part of the [playground-cc spec](README.md). Related: [deployment](deployment.md), [architecture](architecture.md), [frontend](frontend.md), [limits](limits.md), [sharing](sharing.md), [docs site](docs-site.md).
 
 There is no server code, no account and no stored data outside the user's browser, so the attack surface is the page itself. What it has to resist is hostile code: a C program the user did not write, pasted from elsewhere, or arriving through a share link (0.11, 1.0) or an imported file (planned). Unmarked rules are MVP.
 
@@ -36,5 +36,5 @@ static-web-server sends these on every response ([deployment](deployment.md)):
 
 - The pnpm lockfile pins every dependency, and CI installs with the lockfile frozen.
 - **Install scripts** run only for the packages listed in pnpm's `onlyBuiltDependencies`; every other package's are skipped.
-- **CI** pins its actions by commit hash, and runs pull requests with a read-only token and no secrets ([testing](testing.md#ci)). It holds no deploy credentials: the official instance is deployed by hand ([deployment](deployment.md#the-official-instance)).
+- **CI** pins its actions by commit hash, and runs pull requests with a read-only token and no secrets ([testing](testing.md#ci)). It holds no credentials for the official instance, which is deployed by hand ([deployment](deployment.md#the-official-instance)). The only thing CI deploys is the docs site, to GitHub Pages on pushes to `main`, with the short-lived token GitHub Actions issues to that job ([docs site](docs-site.md#hosting)).
 - Nothing else applies: there are no secrets, tokens or user data to protect, and `localStorage` holds only the user's own code and preferences.
