@@ -1,13 +1,42 @@
 {
-  "limits": { "steps": 1000 },
+  "limits": {
+    "steps": 1000
+  },
   "output": "",
   "diagnostic": {
     "code": "limit.steps",
-    "args": { "limit": 1000 },
+    "args": {
+      "limit": 1000
+    },
     "range": {
       "file": "main.c",
-      "start": { "line": 3, "column": 10 },
-      "end": { "line": 3, "column": 11 }
+      "start": {
+        "line": 3,
+        "column": 10
+      },
+      "end": {
+        "line": 3,
+        "column": 11
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 3,
+              "column": 10
+            },
+            "end": {
+              "line": 3,
+              "column": 11
+            }
+          }
+        }
+      ],
+      "total": 1
     }
   }
 }

@@ -1,0 +1,39 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "ub.missing_return",
+    "args": {
+      "function": "sign"
+    },
+    "range": {
+      "file": "main.c",
+      "start": {
+        "line": 11,
+        "column": 10
+      },
+      "end": {
+        "line": 11,
+        "column": 17
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 11,
+              "column": 10
+            },
+            "end": {
+              "line": 11,
+              "column": 17
+            }
+          }
+        }
+      ],
+      "total": 1
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "ub.uninitialized_read",
+    "args": {
+      "name": "sum"
+    },
+    "range": {
+      "file": "main.c",
+      "start": {
+        "line": 4,
+        "column": 5
+      },
+      "end": {
+        "line": 4,
+        "column": 13
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 4,
+              "column": 5
+            },
+            "end": {
+              "line": 4,
+              "column": 13
+            }
+          }
+        }
+      ],
+      "total": 1
+    }
+  }
+}

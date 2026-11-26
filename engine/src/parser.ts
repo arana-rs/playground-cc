@@ -810,9 +810,10 @@ export class Parser {
           yield* this.#take();
           this.#enter(token.range);
           const inner = yield* this.#expression();
-          yield* this.#expect(')');
+          const close = yield* this.#expect(')');
           this.#leave();
-          return inner;
+          // The parentheses belong to the expression's range, so an operator's covers them.
+          return { ...inner, range: span(token.range, close.range) };
         }
         break;
       default:

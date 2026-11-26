@@ -104,17 +104,27 @@ export class Run {
   }
 }
 
-/** The diagnostic with each string arg longer than `length` characters cut to that length, `…` last. */
+/**
+ * The diagnostic with each string arg, and each frame's function name, longer than `length`
+ * characters cut to that length, `…` last.
+ */
 function cutArgs(diagnostic: Diagnostic, length: number): Diagnostic {
+  const cut = (value: string): string => {
+    const characters = Array.from(value);
+    return characters.length > length ? `${characters.slice(0, length - 1).join('')}…` : value;
+  };
   const args = Object.fromEntries(
-    Object.entries(diagnostic.args).map(([name, value]) => {
-      if (typeof value !== 'string') return [name, value];
-      const characters = Array.from(value);
-      return [
-        name,
-        characters.length > length ? `${characters.slice(0, length - 1).join('')}…` : value,
-      ];
-    }),
+    Object.entries(diagnostic.args).map(([name, value]) => [
+      name,
+      typeof value === 'string' ? cut(value) : value,
+    ]),
   );
-  return { ...diagnostic, args };
+  const { stack } = diagnostic;
+  return {
+    ...diagnostic,
+    args,
+    ...(stack && {
+      stack: { ...stack, frames: stack.frames.map((f) => ({ ...f, function: cut(f.function) })) },
+    }),
+  };
 }

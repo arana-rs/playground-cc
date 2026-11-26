@@ -59,6 +59,21 @@ describe('Run', () => {
     }
   });
 
+  it('cuts the function names of a diagnostic stack at the text length', () => {
+    const text = 'int abcdefgh(int z) { return 1 / z; }\nint main(void) { return abcdefgh(0); }\n';
+    const run = new Run({ files: [{ name: 'main.c', text }], limits: { ...LIMITS, text: 5 } });
+    let state = run.advance(1000);
+    while (state.state === 'running') state = run.advance(1000);
+    expect(state).toMatchObject({
+      end: {
+        diagnostic: {
+          code: 'ub.division_by_zero',
+          stack: { frames: [{ function: 'abcd…' }, { function: 'main' }], total: 2 },
+        },
+      },
+    });
+  });
+
   it('keeps its end once ended', () => {
     const run = new Run({
       files: [{ name: 'main.c', text: 'xx' }],

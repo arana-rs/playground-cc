@@ -1,0 +1,51 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "ub.division_by_zero",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": {
+        "line": 2,
+        "column": 10
+      },
+      "end": {
+        "line": 2,
+        "column": 23
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "average",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 2,
+              "column": 10
+            },
+            "end": {
+              "line": 2,
+              "column": 23
+            }
+          }
+        },
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "line": 6,
+              "column": 24
+            }
+          }
+        }
+      ],
+      "total": 2
+    }
+  }
+}

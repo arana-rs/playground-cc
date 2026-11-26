@@ -1,12 +1,84 @@
 {
+  "limits": {
+    "stack": 76
+  },
   "output": "",
   "diagnostic": {
     "code": "limit.stack",
-    "args": { "limit": 8388608 },
+    "args": {
+      "limit": 76
+    },
     "range": {
       "file": "main.c",
-      "start": { "line": 2, "column": 10 },
-      "end": { "line": 2, "column": 22 }
+      "start": {
+        "line": 2,
+        "column": 10
+      },
+      "end": {
+        "line": 2,
+        "column": 22
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "depth",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 2,
+              "column": 10
+            },
+            "end": {
+              "line": 2,
+              "column": 22
+            }
+          }
+        },
+        {
+          "function": "depth",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 2,
+              "column": 10
+            },
+            "end": {
+              "line": 2,
+              "column": 22
+            }
+          }
+        },
+        {
+          "function": "depth",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 2,
+              "column": 10
+            },
+            "end": {
+              "line": 2,
+              "column": 22
+            }
+          }
+        },
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "line": 6,
+              "column": 18
+            }
+          }
+        }
+      ],
+      "total": 4
     }
   }
 }

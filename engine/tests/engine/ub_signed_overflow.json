@@ -1,0 +1,53 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "ub.signed_overflow",
+    "args": {
+      "type": "int"
+    },
+    "range": {
+      "file": "main.c",
+      "start": {
+        "line": 2,
+        "column": 23
+      },
+      "end": {
+        "line": 2,
+        "column": 43
+      }
+    },
+    "stack": {
+      "frames": [
+        {
+          "function": "factorial",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 2,
+              "column": 23
+            },
+            "end": {
+              "line": 2,
+              "column": 43
+            }
+          }
+        },
+        {
+          "function": "main",
+          "range": {
+            "file": "main.c",
+            "start": {
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "line": 6,
+              "column": 23
+            }
+          }
+        }
+      ],
+      "total": 2
+    }
+  }
+}
