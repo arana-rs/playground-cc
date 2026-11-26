@@ -62,6 +62,7 @@ export type DiagnosticCode =
   | CheckCode
   | 'unsupported.function'
   | 'limit.static_data'
+  | 'limit.stack'
   | 'unsupported.construct'
   | 'unsupported.header'
   | 'directive.error'

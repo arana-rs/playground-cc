@@ -71,8 +71,8 @@ interface SwitchContext {
   hasDefault: boolean;
 }
 
-const INT_MIN = -(2 ** 31);
-const INT_MAX = 2 ** 31 - 1;
+export const INT_MIN = -(2 ** 31);
+export const INT_MAX = 2 ** 31 - 1;
 
 function error(
   code: DiagnosticCode,
@@ -532,7 +532,7 @@ export class Checker {
  * An integer constant expression's value, as C17 6.6 has it for `int`. The expression has been
  * checked already; this only computes it, so it charges no steps.
  */
-function constantValue(expression: Expression): number {
+export function constantValue(expression: Expression): number {
   const notConstant = () => error('type.not_constant', expression.range);
   const checked = (value: number): number => {
     if (value < INT_MIN || value > INT_MAX) {

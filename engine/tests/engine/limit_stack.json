@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "limit.stack",
+    "args": { "limit": 8388608 },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 10 },
+      "end": { "line": 2, "column": 22 }
+    }
+  }
+}

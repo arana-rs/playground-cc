@@ -11,6 +11,8 @@ export interface Limits {
   nesting: number;
   /** Static data in bytes: globals, `static` variables and string literals (`limit.static_data`). */
   staticData: number;
+  /** Stack size in bytes: a call whose frame does not fit stops the run (`limit.stack`). */
+  stack: number;
 }
 
 export const LIMITS: Readonly<Limits> = {
@@ -19,4 +21,5 @@ export const LIMITS: Readonly<Limits> = {
   text: 200, // chosen
   nesting: 256, // provisional
   staticData: 16 * 1024 * 1024, // provisional
+  stack: 8 * 1024 * 1024, // provisional
 };

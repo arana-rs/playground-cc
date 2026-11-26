@@ -49,6 +49,16 @@ describe('Run', () => {
     }
   });
 
+  it('runs the program after checking it, and ends with its exit status', () => {
+    const files = [{ name: 'main.c', text: 'int main(void) {\n  return 258;\n}\n' }];
+    for (const slice of [1, 1000]) {
+      const run = new Run({ files, limits: LIMITS });
+      let state = run.advance(slice);
+      while (state.state === 'running') state = run.advance(slice);
+      expect(state).toEqual({ state: 'ended', end: { reason: 'exit', status: 2 } });
+    }
+  });
+
   it('keeps its end once ended', () => {
     const run = new Run({
       files: [{ name: 'main.c', text: 'xx' }],

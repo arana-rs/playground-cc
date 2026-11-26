@@ -103,7 +103,7 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 | `limit.include_depth` | Before the run: `#include`s nested deeper than the limit (1.0); carries `limit` | [limits](limits.md#run-limits) |
 | `limit.nesting` | Before the run: expressions, statements, declarators or a resolved type nested deeper than the limit; carries `limit` | [engine](engine.md#before-the-run) |
 | `limit.static_data` | Before the run: globals, `static` variables and string literals together larger than the limit; carries `limit` | [memory](memory.md#the-stack-and-the-heap) |
-| `limit.stack` | During the run: a call that does not fit in the stack | [memory](memory.md#the-stack-and-the-heap) |
+| `limit.stack` | During the run: a call that does not fit in the stack; carries `limit`, the stack size in bytes | [memory](memory.md#the-stack-and-the-heap) |
 | `engine.internal` | An unexpected failure inside the engine (a bug in the engine, never in the user's program), or a Worker that fails to load or crashes | [architecture](architecture.md#components), [worker protocol](worker-protocol.md#worker-to-ui) |
 
 ## Endings without a code

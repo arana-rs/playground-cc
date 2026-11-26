@@ -1,5 +1,6 @@
 import { Checker, type Program } from './checker';
 import { type Diagnostic, DiagnosticError } from './diagnostic';
+import { Interpreter } from './interpreter';
 import { Lexer } from './lexer';
 import type { Limits } from './limits';
 import { Parser } from './parser';
@@ -36,6 +37,7 @@ export class Run {
   #parser: Parser | undefined;
   #checker: Checker | undefined;
   #beforeRun: Generator<void, Program, void> | undefined;
+  #interpreter: Interpreter | undefined;
   #end: RunEnd | undefined;
 
   constructor(options: RunOptions) {
@@ -59,10 +61,16 @@ export class Run {
           this.#beforeRun = this.#translate(this.#parser);
         }
         const pauseAt = this.#steps.used + maxSteps;
-        this.#parser.pauseAt = pauseAt;
-        if (this.#checker !== undefined) this.#checker.pauseAt = pauseAt;
-        if (!this.#beforeRun.next().done) return { state: 'running' };
-        throw new Error('not implemented yet: the interpreter arrives in step 0.0.7');
+        if (this.#interpreter === undefined) {
+          this.#parser.pauseAt = pauseAt;
+          if (this.#checker !== undefined) this.#checker.pauseAt = pauseAt;
+          const translated = this.#beforeRun.next();
+          if (!translated.done) return { state: 'running' };
+          this.#interpreter = new Interpreter(translated.value, this.#steps, this.#limits);
+        }
+        const status = this.#interpreter.advance(pauseAt);
+        if (status === undefined) return { state: 'running' };
+        this.#end = { reason: 'exit', status };
       } catch (error) {
         if (!(error instanceof DiagnosticError)) throw error;
         this.#end = {
