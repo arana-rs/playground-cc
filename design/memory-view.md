@@ -1,13 +1,13 @@
 # Memory view
 
-> Part of the [playground-cc spec](../spec.md). Related: [memory](memory.md), [frontend screens](frontend-screens.md), [worker protocol](worker-protocol.md), [debugger](debugger.md), [limits](limits.md).
+> Part of the [playground-cc spec](README.md). Related: [memory](memory.md), [frontend screens](frontend-screens.md), [worker protocol](worker-protocol.md), [debugger](debugger.md), [limits](limits.md).
 
 The memory view (0.8, 1.0) is a window over the page that steps through the program line by line, forward and back, and draws its memory the way it is drawn in class: every value is a box, with its address above it, its value inside and its name below, and a pointer's box holds the address it points to. It is separate from the [debugger](debugger.md): it has its own buttons and its own session, and never runs at the same time as a run or a debug session.
 
 ## Opening and closing
 
 - **The Memory button** in the top bar ([frontend screens](frontend-screens.md#10-features)) opens the window with the editor's code, paused before the first line of `main`. It is disabled during a run or a debug session. A diagnostic before the run does not open the window; it shows in the console as after Run ([errors](errors.md#format)).
-- **From a diagnostic**: a diagnostic during a run gets a "View memory" link in the console. It opens the window paused where the diagnostic happened, by running the files that ran again with the input lines and the end of input the run received ([determinism](../spec.md#principles)), with I/O on if the run read any. Step back works from there.
+- **From a diagnostic**: a diagnostic during a run gets a "View memory" link in the console. It opens the window paused where the diagnostic happened, by running the files that ran again with the input lines and the end of input the run received ([determinism](README.md#principles)), with I/O on if the run read any. Step back works from there.
 - **Closing** (the close button or Escape) ends the session and returns to the page as it was. The page's console is not touched.
 - The window is a modal dialog covering most of the page, and the whole screen on phones. The editor behind it cannot change while it is open.
 

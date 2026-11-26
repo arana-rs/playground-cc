@@ -1,8 +1,8 @@
 # Sharing, export and import
 
-> Part of the [playground-cc spec](../spec.md). Related: [frontend](frontend.md), [security](security.md), [limits](limits.md), [frontend screens](frontend-screens.md).
+> Part of the [playground-cc spec](README.md). Related: [frontend](frontend.md), [security](security.md), [limits](limits.md), [frontend screens](frontend-screens.md).
 
-How a program leaves the browser and comes back: a share link or an exported file (0.11, 1.0), and importing files (planned). Nothing leaves unless the user does it ([principles](../spec.md#principles)). The actions live in a menu in the top bar ([frontend screens](frontend-screens.md#10-features)).
+How a program leaves the browser and comes back: a share link or an exported file (0.11, 1.0), and importing files (planned). Nothing leaves unless the user does it ([principles](README.md#principles)). The actions live in a menu in the top bar ([frontend screens](frontend-screens.md#10-features)).
 
 ## Share link
 

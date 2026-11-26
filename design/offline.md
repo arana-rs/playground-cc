@@ -1,13 +1,13 @@
 # Offline
 
-> Part of the [playground-cc spec](../spec.md). Related: [deployment](deployment.md), [worker protocol](worker-protocol.md), [licensing](licensing.md), [security](security.md).
+> Part of the [playground-cc spec](README.md). Related: [deployment](deployment.md), [worker protocol](worker-protocol.md), [licensing](licensing.md), [security](security.md).
 
-Once loaded, the playground keeps working without a connection (0.11, 1.0, [principles](../spec.md#principles)).
+Once loaded, the playground keeps working without a connection (0.11, 1.0, [principles](README.md#principles)).
 
 ## Service worker
 
 - **A service worker caches the whole build** on the first visit: the page, its scripts and styles, the Worker and the catalogs. The build writes the list of files, with their content hashes, into the service worker script itself, so nothing is left out and nothing else is cached.
-- **Cache first**: every request is answered from the cache. The site makes no other request of its own ([principles](../spec.md#principles)).
+- **Cache first**: every request is answered from the cache. The site makes no other request of its own ([principles](README.md#principles)).
 - **The first visit needs the network**; after it, the page, Run, the debugger and everything else work offline, for as long as the browser keeps the cache (Safari may clear it after weeks without a visit; the next visit then needs the network again).
 - It is a plain service worker written for the site, with no library: it caches one list and serves from it.
 - **Responses are served unchanged**: the cache stores each response as the server sent it, headers included, so the security headers ([security](security.md#headers)) apply offline too.

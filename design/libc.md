@@ -1,6 +1,6 @@
 # Standard library
 
-> Part of the [playground-cc spec](../spec.md). Related: [language](language.md), [memory](memory.md), [errors](errors.md), [engine](engine.md), [roadmap](roadmap.md).
+> Part of the [playground-cc spec](README.md). Related: [language](language.md), [memory](memory.md), [errors](errors.md), [engine](engine.md), [roadmap](roadmap.md).
 
 The subset of the C17 standard library the engine provides, and how it behaves. Library functions read and write memory through the same checks as the program ([memory](memory.md#detected-errors)), so `strcpy` into a short array stops with `ub.out_of_bounds`, and `strlen` of an unterminated array too. Unmarked phases are MVP ([roadmap](roadmap.md)).
 
@@ -62,7 +62,7 @@ The heap rules are in [memory](memory.md#the-stack-and-the-heap); these function
 
 ## Determinism
 
-The library never reads the real clock or real randomness ([principles](../spec.md#principles)).
+The library never reads the real clock or real randomness ([principles](README.md#principles)).
 - **`rand`** reproduces glibc's generator, written from its published algorithm rather than ported from glibc's source (the additive feedback generator behind `rand`, `RAND_MAX` 2147483647, seed 1 until `srand`), so a seed gives the same sequence as glibc.
 - **`time`** always returns 0, and stores it through its argument when that is not null, so `srand(time(NULL))` always gives the same sequence. **`clock`** returns the steps the program has executed so far, not those before the run ([engine](engine.md#before-the-run)), one step counting as one microsecond (`CLOCKS_PER_SEC` is 1000000, as in glibc). Their output is deterministic instead of matching a native run, so both are outside the GCC and Clang guarantee.
 - **`qsort`** is a stable merge sort. Its scratch buffer, the array's size in bytes, is charged to the stack size for the length of the call, though it is not a variable and nothing shows it; when it does not fit, the call stops with `limit.stack` before the buffer is made ([memory](memory.md#the-stack-and-the-heap)). The order of equal elements is unspecified in C17, so a program whose output depends on it is outside the GCC and Clang guarantee.

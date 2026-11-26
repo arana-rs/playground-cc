@@ -1,6 +1,6 @@
 # Frontend screens
 
-> Part of the [playground-cc spec](../spec.md). Related: [frontend](frontend.md), [worker protocol](worker-protocol.md), [errors](errors.md), [memory](memory.md#leak-report), [libc](libc.md#input), [licensing](licensing.md).
+> Part of the [playground-cc spec](README.md). Related: [frontend](frontend.md), [worker protocol](worker-protocol.md), [errors](errors.md), [memory](memory.md#leak-report), [libc](libc.md#input), [licensing](licensing.md).
 
 The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, console and input, on desktop and on phones, and where the 1.0 features go.
 

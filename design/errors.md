@@ -1,8 +1,8 @@
 # Diagnostic codes
 
-> Part of the [playground-cc spec](../spec.md). Related: [engine](engine.md), [architecture](architecture.md), [frontend](frontend.md).
+> Part of the [playground-cc spec](README.md). Related: [engine](engine.md), [architecture](architecture.md), [frontend](frontend.md).
 
-Every diagnostic, with its code. The engine produces them all, except `engine.internal`, which the Worker loop produces when the engine fails, and the UI when the Worker fails to load or crashes. The rule that produces each one lives in the fragment linked from its row; this table is the index. `docs/check_links.py` checks that every code written in the spec is listed here, and that every code listed here is used somewhere else.
+Every diagnostic, with its code. The engine produces them all, except `engine.internal`, which the Worker loop produces when the engine fails, and the UI when the Worker fails to load or crashes. The rule that produces each one lives in the fragment linked from its row; this table is the index. `design/check_links.py` checks that every code written in the spec is listed here, and that every code listed here is used somewhere else.
 
 ## Format
 

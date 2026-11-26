@@ -1,6 +1,6 @@
 # C engine
 
-> Part of the [playground-cc spec](../spec.md). Related: [architecture](architecture.md), [worker protocol](worker-protocol.md), [limits](limits.md), [frontend](frontend.md), [deployment](deployment.md).
+> Part of the [playground-cc spec](README.md). Related: [architecture](architecture.md), [worker protocol](worker-protocol.md), [limits](limits.md), [frontend](frontend.md), [deployment](deployment.md).
 
 ## Execution model
 

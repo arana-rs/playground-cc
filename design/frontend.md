@@ -1,6 +1,6 @@
 # Frontend
 
-> Part of the [playground-cc spec](../spec.md). Related: [frontend screens](frontend-screens.md), [architecture](architecture.md), [worker protocol](worker-protocol.md), [errors](errors.md), [deployment](deployment.md).
+> Part of the [playground-cc spec](README.md). Related: [frontend screens](frontend-screens.md), [architecture](architecture.md), [worker protocol](worker-protocol.md), [errors](errors.md), [deployment](deployment.md).
 
 The base of the web app: technologies, the single page, diagnostics, preferences, saving the code, i18n, shortcuts, accessibility and browser support. The layout and where the 1.0 features go are in [frontend screens](frontend-screens.md).
 
@@ -20,7 +20,7 @@ The base of the web app: technologies, the single page, diagnostics, preferences
 ## One page
 
 - The app is one page at `/`, with no router. A router comes back only if a second screen appears (exercises, planned).
-- Sharing a program by URL (0.11, 1.0, [sharing](sharing.md)) puts it in the URL fragment (`#…`), which the browser never sends to the server, so shared code stays out of server logs ([principles](../spec.md#principles)). A shared program runs only when the user starts it (Run, Debug or Memory, [security](security.md)).
+- Sharing a program by URL (0.11, 1.0, [sharing](sharing.md)) puts it in the URL fragment (`#…`), which the browser never sends to the server, so shared code stays out of server logs ([principles](README.md#principles)). A shared program runs only when the user starts it (Run, Debug or Memory, [security](security.md)).
 
 ## Diagnostics
 

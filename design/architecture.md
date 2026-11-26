@@ -1,6 +1,6 @@
 # Architecture
 
-> Part of the [playground-cc spec](../spec.md). Related: [engine](engine.md), [worker protocol](worker-protocol.md), [frontend](frontend.md), [deployment](deployment.md).
+> Part of the [playground-cc spec](README.md). Related: [engine](engine.md), [worker protocol](worker-protocol.md), [frontend](frontend.md), [deployment](deployment.md).
 
 ## Components
 
@@ -45,4 +45,4 @@ A pnpm workspace with two packages.
 |---|---|---|
 | `engine/` | lib | The C engine. The build enforces its independence: its TypeScript config includes no DOM or Worker types, so `window`, `document` or `postMessage` do not compile; and its `package.json` declares no UI dependency, which pnpm (no hoisting) turns into an unresolvable import of React or `web/`. Dependencies go one way: `web/` imports `engine/`, never the reverse. Unit, oracle and engine tests live here |
 | `web/` | SPA | Vite + React app: the UI, the Worker entry that runs the Worker loop over `engine`, the message catalogs, and the unit and end-to-end tests. Its build is the static site ([deployment](deployment.md)) |
-| `docs/` | docs | This spec |
+| `design/` | docs | This spec |

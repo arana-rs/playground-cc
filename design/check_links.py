@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Check the spec (docs/spec.md and docs/spec/*.md): links and error codes.
+"""Check the spec (design/README.md and the other design/*.md): links and error codes.
 
-Usage: python3 docs/check_links.py   (from any directory)
+Usage: python3 design/check_links.py   (from any directory)
 
 - Links: every relative link points to an existing file and heading anchor.
 - Diagnostic codes: every code written in the spec (`area.reason`, as in
-  `limit.steps`) is listed in docs/spec/errors.md, and every code listed there
-  is used somewhere else. Skipped while docs/spec/errors.md does not exist.
+  `limit.steps`) is listed in design/errors.md, and every code listed there
+  is used somewhere else. Skipped while design/errors.md does not exist.
 
 Exits 1 and lists each problem when any is found.
 """
@@ -15,8 +15,9 @@ import re
 import sys
 from pathlib import Path
 
-DOCS = Path(__file__).resolve().parent
-ERRORS = DOCS / "spec" / "errors.md"
+DESIGN = Path(__file__).resolve().parent
+INDEX = DESIGN / "README.md"
+ERRORS = DESIGN / "errors.md"
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 HEADING = re.compile(r"^#+\s+(.*)$", re.M)
 CATALOG_ROW = re.compile(r"^\| `([a-z]+\.[a-z_]+)` \|", re.M)
@@ -42,10 +43,10 @@ def check_links(files: list[Path]) -> list[str]:
             dest = (f.parent / path).resolve() if path else f.resolve()
             if dest not in anchors:
                 if not dest.exists():
-                    broken.append(f"missing file: {f.relative_to(DOCS)} -> {target}")
+                    broken.append(f"missing file: {f.relative_to(DESIGN)} -> {target}")
                 continue
             if anchor and anchor not in anchors[dest]:
-                broken.append(f"missing anchor: {f.relative_to(DOCS)} -> {target}")
+                broken.append(f"missing anchor: {f.relative_to(DESIGN)} -> {target}")
     return broken
 
 
@@ -63,14 +64,14 @@ def check_codes(files: list[Path]) -> list[str]:
                 continue
             used.add(code)
             if code not in catalog:
-                problems.append(f"unknown error code: {f.relative_to(DOCS)} -> {code}")
+                problems.append(f"unknown error code: {f.relative_to(DESIGN)} -> {code}")
     for code in sorted(catalog - used):
         problems.append(f"unused error code: errors.md -> {code}")
     return problems
 
 
 def main() -> int:
-    files = [DOCS / "spec.md", *sorted((DOCS / "spec").glob("*.md"))]
+    files = [INDEX, *sorted(f for f in DESIGN.glob("*.md") if f != INDEX)]
     broken = check_links(files)
     codes = check_codes(files)
     for line in broken + codes:

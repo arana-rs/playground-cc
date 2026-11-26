@@ -1,6 +1,6 @@
 # Memory model
 
-> Part of the [playground-cc spec](../spec.md). Related: [language](language.md), [memory view](memory-view.md), [errors](errors.md), [engine](engine.md), [roadmap](roadmap.md).
+> Part of the [playground-cc spec](README.md). Related: [language](language.md), [memory view](memory-view.md), [errors](errors.md), [engine](engine.md), [roadmap](roadmap.md).
 
 How the engine represents memory, what a pointer is, and which memory errors it detects. Unmarked phases are MVP ([roadmap](roadmap.md)).
 

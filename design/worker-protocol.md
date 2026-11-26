@@ -1,6 +1,6 @@
 # Worker protocol
 
-> Part of the [playground-cc spec](../spec.md). Related: [architecture](architecture.md), [engine](engine.md), [errors](errors.md), [libc](libc.md).
+> Part of the [playground-cc spec](README.md). Related: [architecture](architecture.md), [engine](engine.md), [errors](errors.md), [libc](libc.md).
 
 The messages between the UI on the main thread and the Worker loop ([architecture](architecture.md#components)).
 

@@ -1,6 +1,6 @@
 # C language
 
-> Part of the [playground-cc spec](../spec.md). Related: [errors](errors.md), [engine](engine.md), [libc](libc.md), [memory](memory.md), [roadmap](roadmap.md).
+> Part of the [playground-cc spec](README.md). Related: [errors](errors.md), [engine](engine.md), [libc](libc.md), [memory](memory.md), [roadmap](roadmap.md).
 
 The C the engine accepts: the standard, the target platform, what is supported in each phase and what is not supported at all. The standard library subset is a separate topic.
 
@@ -9,7 +9,7 @@ The C the engine accepts: the standard, the target platform, what is supported i
 - **Standard**: C17 (ISO/IEC 9899:2018), with no GNU or other extensions.
 - **Target**: x86-64 Linux with the System V ABI (LP64). Every implementation-defined behavior is what GCC does there; the oracle tests run on that platform.
 - **Constraint violations are errors**: whatever C17 requires a diagnostic for stops the program before it starts, even where GCC only warns (calling an undeclared function, for example). Those codes (areas `syntax`, `name`, `type`) are added to [errors](errors.md) as each check is built.
-- **Order of evaluation**: where C17 leaves it unspecified (operands, function arguments), the engine evaluates left to right. A program whose output depends on that order is outside the GCC and Clang guarantee ([principles](../spec.md#principles)).
+- **Order of evaluation**: where C17 leaves it unspecified (operands, function arguments), the engine evaluates left to right. A program whose output depends on that order is outside the GCC and Clang guarantee ([principles](README.md#principles)).
 - **Character set**: source and execution character set are UTF-8, as in GCC; a non-ASCII character in a string literal takes its UTF-8 bytes.
 - **Empty parentheses**: `()` in a function declaration or definition means no parameters, like `(void)`; calling such a function with arguments is an error. Old-style (K&R) definitions are not supported.
 

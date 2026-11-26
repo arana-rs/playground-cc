@@ -1,6 +1,6 @@
 # Security
 
-> Part of the [playground-cc spec](../spec.md). Related: [deployment](deployment.md), [architecture](architecture.md), [frontend](frontend.md), [limits](limits.md), [sharing](sharing.md).
+> Part of the [playground-cc spec](README.md). Related: [deployment](deployment.md), [architecture](architecture.md), [frontend](frontend.md), [limits](limits.md), [sharing](sharing.md).
 
 There is no server code, no account and no stored data outside the user's browser, so the attack surface is the page itself. What it has to resist is hostile code: a C program the user did not write, pasted from elsewhere, or arriving through a share link (0.11, 1.0) or an imported file (planned). Unmarked rules are MVP.
 
@@ -29,7 +29,7 @@ static-web-server sends these on every response ([deployment](deployment.md)):
 
 - `script-src 'self'` without `'unsafe-eval'` is what forbids generating code. `style-src` allows inline styles because CodeMirror injects its own; scripts stay forbidden inline.
 - `Cross-Origin-Opener-Policy` cuts the reference between the page and any window of another origin that opened it, so that window cannot navigate or reach the page. The site needs no cross-origin isolation, so no `Cross-Origin-Embedder-Policy` ([engine](engine.md#execution-model)).
-- Everything the site loads comes from its own origin: no CDN, no external fonts or scripts ([principles](../spec.md#principles)).
+- Everything the site loads comes from its own origin: no CDN, no external fonts or scripts ([principles](README.md#principles)).
 - HTTPS and HSTS belong to whoever hosts the site; on the official instance, its reverse proxy adds them and passes these headers through unchanged ([deployment](deployment.md#the-official-instance)).
 
 ## Dependencies

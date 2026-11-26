@@ -1,6 +1,6 @@
 # Roadmap
 
-> Part of the [playground-cc spec](../spec.md). Related: [engine](engine.md), [frontend](frontend.md), [deployment](deployment.md).
+> Part of the [playground-cc spec](README.md). Related: [engine](engine.md), [frontend](frontend.md), [deployment](deployment.md).
 
 | Phase | Meaning |
 |---|---|

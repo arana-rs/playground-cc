@@ -1,3 +1,3 @@
 # playground-cc
 
-Browser-based C playground. The specification starts at [docs/spec.md](docs/spec.md).
+Browser-based C playground. The specification starts at [design/README.md](design/README.md).

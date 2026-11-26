@@ -1,6 +1,6 @@
 # Deployment
 
-> Part of the [playground-cc spec](../spec.md). Related: [frontend](frontend.md), [security](security.md), [offline](offline.md).
+> Part of the [playground-cc spec](README.md). Related: [frontend](frontend.md), [security](security.md), [offline](offline.md).
 
 ## What the repository ships
 

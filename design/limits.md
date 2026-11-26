@@ -1,13 +1,13 @@
 # Limits
 
-> Part of the [playground-cc spec](../spec.md). Related: [engine](engine.md), [memory](memory.md), [memory view](memory-view.md), [architecture](architecture.md), [sharing](sharing.md), [language](language.md).
+> Part of the [playground-cc spec](README.md). Related: [engine](engine.md), [memory](memory.md), [memory view](memory-view.md), [architecture](architecture.md), [sharing](sharing.md), [language](language.md).
 
 Every limit of a run, the Worker's tuning values, how each value is chosen, and where its rule lives.
 
 ## Rules
 
 - **Fixed by the release**: there is no setting for any value on this page. Changing one is a change to this page and a new release.
-- **Run limits are in steps, bytes or counts, never in time**, so the same program stops at the same point on every machine and in the oracle tests ([principles](../spec.md#principles)). A faster machine only gets there sooner; a slower one than the reference takes longer than the criterion's time.
+- **Run limits are in steps, bytes or counts, never in time**, so the same program stops at the same point on every machine and in the oracle tests ([principles](README.md#principles)). A faster machine only gets there sooner; a slower one than the reference takes longer than the criterion's time.
 - **Worker tuning values** never change what a program prints, so they may be in time.
 - **Reference hardware**: an Intel N100-class laptop with 8 GB of memory, running current Chrome.
 - **Measured on the oracle test corpus**: a criterion in time ("the steps the reference runs in 10 seconds") uses the average rate over the whole corpus on the reference, not one program.

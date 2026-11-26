@@ -1,6 +1,6 @@
 # Debugger
 
-> Part of the [playground-cc spec](../spec.md). Related: [engine](engine.md), [worker protocol](worker-protocol.md), [frontend screens](frontend-screens.md), [memory](memory.md), [errors](errors.md).
+> Part of the [playground-cc spec](README.md). Related: [engine](engine.md), [worker protocol](worker-protocol.md), [frontend screens](frontend-screens.md), [memory](memory.md), [errors](errors.md).
 
 A gdb-style command console (0.7, 1.0): the user debugs by typing gdb's commands, with gdb's names and behavior, over the engine's paused state ([engine](engine.md#execution-model)). There are no buttons, gutter breakpoints or panels for it; the [memory view](memory-view.md) (0.8) is a separate window with its own buttons and session.
 
