@@ -16,7 +16,15 @@ export type SyntaxCode =
   | 'syntax.invalid_directive'
   | 'syntax.invalid_include'
   | 'syntax.extra_tokens'
-  | 'syntax.directive_whitespace';
+  | 'syntax.directive_whitespace'
+  | 'syntax.expected_token'
+  | 'syntax.expected_expression'
+  | 'syntax.expected_identifier'
+  | 'syntax.expected_type'
+  | 'syntax.expected_declaration'
+  | 'syntax.expected_statement'
+  | 'syntax.invalid_type_specifiers'
+  | 'syntax.empty_declaration';
 
 /** Every diagnostic code in use so far; each one has its row in design/errors.md. */
 export type DiagnosticCode =
@@ -26,7 +34,8 @@ export type DiagnosticCode =
   | 'directive.error'
   | 'engine.internal'
   | 'limit.source'
-  | 'limit.steps';
+  | 'limit.steps'
+  | 'limit.nesting';
 
 /** A place in a file: 1-based line and column, the column in UTF-16 code units. */
 export interface Position {

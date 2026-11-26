@@ -40,6 +40,14 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 | `syntax.invalid_include` | Before the run: an `#include` without a header name | [language](language.md#checks) |
 | `syntax.extra_tokens` | Before the run: tokens after the end of a directive; carries `directive` | [language](language.md#checks) |
 | `syntax.directive_whitespace` | Before the run: a form feed or vertical tab inside a directive | [language](language.md#checks) |
+| `syntax.expected_token` | Before the run: a punctuator or keyword missing; carries `token` | [language](language.md#checks) |
+| `syntax.expected_expression` | Before the run: an expression missing | [language](language.md#checks) |
+| `syntax.expected_identifier` | Before the run: a declarator without its name | [language](language.md#checks) |
+| `syntax.expected_type` | Before the run: a declaration without a type | [language](language.md#checks) |
+| `syntax.expected_declaration` | Before the run: something other than a declaration at file scope | [language](language.md#checks) |
+| `syntax.expected_statement` | Before the run: a declaration where only a statement may go | [language](language.md#checks) |
+| `syntax.invalid_type_specifiers` | Before the run: more than one type specifier | [language](language.md#checks) |
+| `syntax.empty_declaration` | Before the run: a declaration that declares nothing | [language](language.md#checks) |
 | `limit.steps` | During or before the run: the program, or the steps before it, used up the step budget; carries `limit`, the budget | [engine](engine.md#execution-model) |
 | `ub.division_by_zero` | During the run: integer division or remainder by zero | [language](language.md#undefined-behavior) |
 | `ub.uninitialized_read` | During the run: reading a value with bytes never written; carries `name` for a variable | [memory](memory.md#blocks) |

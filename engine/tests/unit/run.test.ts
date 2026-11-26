@@ -14,7 +14,10 @@ describe('Run', () => {
       end: { reason: 'diagnostic', diagnostic: { code: 'limit.source', args: { limit: 9 } } },
     });
     const atLimit = new Run({ files, limits: { ...LIMITS, source: 10 } });
-    expect(() => atLimit.advance(100)).toThrow('not implemented yet');
+    // At the limit the run goes on, to the parser's first error.
+    expect(atLimit.advance(100)).toMatchObject({
+      end: { diagnostic: { code: 'syntax.expected_type' } },
+    });
   });
 
   it('keeps its end once ended', () => {

@@ -7,10 +7,13 @@ export interface Limits {
   source: number;
   /** Text length in characters: longer diagnostic string args are cut with `…` (a display cap). */
   text: number;
+  /** Nesting depth of expressions, statements and declarators (`limit.nesting`). */
+  nesting: number;
 }
 
 export const LIMITS: Readonly<Limits> = {
   steps: 100_000_000, // provisional
   source: 256 * 1024, // provisional
   text: 200, // chosen
+  nesting: 256, // provisional
 };

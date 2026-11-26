@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "unsupported.construct",
+    "args": { "construct": "array" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 13 },
+      "end": { "line": 2, "column": 16 }
+    }
+  }
+}

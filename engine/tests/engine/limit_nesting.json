@@ -1,0 +1,13 @@
+{
+  "limits": { "nesting": 4 },
+  "output": "",
+  "diagnostic": {
+    "code": "limit.nesting",
+    "args": { "limit": 4 },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 14 },
+      "end": { "line": 2, "column": 15 }
+    }
+  }
+}

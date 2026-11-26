@@ -100,7 +100,7 @@ Each of these stops the program before it starts with `unsupported.construct` ([
 | `wide_char` | Wide and Unicode character constants and strings (`L`, `u`, `U`, `u8` prefixes) |
 | `pragma` | Any `#pragma`, `#pragma once` included (header guards with `#ifndef` replace it), and the `_Pragma` operator |
 | `line_directive` | `#line` |
-| `extension` | GNU extensions (`__attribute__`, statement expressions, `typeof`, case ranges, nested functions, zero-length arrays) |
+| `extension` | GNU extensions (`__attribute__`, statement expressions, `__typeof__`, case ranges, nested functions, zero-length arrays). `typeof` is not one: in C17 it is an ordinary identifier, as GCC reads it with `-std=c17` |
 
 ## Undefined behavior
 
@@ -137,5 +137,13 @@ Each check of a constraint violation before the run ([standard and target](#stan
 | `syntax.invalid_include` | An `#include` not followed by a header name (`<stdio.h>` or `"file.h"`) |
 | `syntax.extra_tokens` | Tokens after a directive's last one (`#include <stdio.h> x`); carries `directive` |
 | `syntax.directive_whitespace` | A form feed or vertical tab between the tokens of a directive (C17 6.10) |
+| `syntax.expected_token` | A punctuator or keyword missing where the grammar needs it (`;` after a statement, `)`, `while` after `do`); carries `token`; the range is the token found instead |
+| `syntax.expected_expression` | An expression missing (`x = ;`, `{}` as an initializer) |
+| `syntax.expected_identifier` | A declarator without its name (`int = 1;`) |
+| `syntax.expected_type` | A declaration without a type specifier (`main(void)`, a parameter without one); C17 has no implicit `int` |
+| `syntax.expected_declaration` | Something other than a declaration or a function definition at file scope (a stray `}` or `;`) |
+| `syntax.expected_statement` | A declaration where only a statement may go: the body of `if`, `while`, `do` or `for`, or after a `case` or `default` label |
+| `syntax.invalid_type_specifiers` | More than one type specifier (`int int`, `void int`) |
+| `syntax.empty_declaration` | A declaration that declares nothing (`int;`) |
 
 - **Character constants** get the value GCC gives them: one byte is a signed `char`; several (`'ab'`, a non-ASCII character) make an `int` with each byte shifted in, the last four kept.

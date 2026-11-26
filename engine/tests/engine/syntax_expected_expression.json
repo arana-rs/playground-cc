@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.expected_expression",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 15 },
+      "end": { "line": 2, "column": 16 }
+    }
+  }
+}

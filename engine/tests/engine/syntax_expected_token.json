@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.expected_token",
+    "args": { "token": ";" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 5, "column": 3 },
+      "end": { "line": 5, "column": 9 }
+    }
+  }
+}

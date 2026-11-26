@@ -1,6 +1,8 @@
+import type { TranslationUnit } from './ast';
 import { type Diagnostic, DiagnosticError } from './diagnostic';
 import { Lexer } from './lexer';
 import type { Limits } from './limits';
+import { Parser } from './parser';
 import { Preprocessor } from './preprocessor';
 import { SourceFile, utf8Length } from './source';
 import { Steps } from './steps';
@@ -31,7 +33,8 @@ export class Run {
   readonly #steps: Steps;
   readonly #files: SourceFile[];
   readonly #limits: Readonly<Limits>;
-  #tokens: TokenStream | undefined;
+  #parser: Parser | undefined;
+  #parse: Generator<void, TranslationUnit, void> | undefined;
   #end: RunEnd | undefined;
 
   constructor(options: RunOptions) {
@@ -44,21 +47,19 @@ export class Run {
   advance(maxSteps: number): RunState {
     if (this.#end === undefined) {
       try {
-        if (this.#tokens === undefined) {
+        if (this.#parser === undefined || this.#parse === undefined) {
           this.#checkSourceSize();
           // One file until 0.9 (design/worker-protocol.md).
           const file = this.#files[0];
           if (file === undefined) throw new Error('a run needs a file');
           const lexer = new Lexer(file, this.#steps);
-          this.#tokens = new TokenStream(new Preprocessor(lexer, this.#steps), this.#steps);
+          const tokens = new TokenStream(new Preprocessor(lexer, this.#steps), this.#steps);
+          this.#parser = new Parser(tokens, this.#steps, this.#limits.nesting);
+          this.#parse = this.#parser.parse();
         }
-        const stop = this.#steps.used + maxSteps;
-        while (this.#steps.used < stop) {
-          if (this.#tokens.next().kind === 'eof') {
-            throw new Error('not implemented yet: the parser arrives in step 0.0.5');
-          }
-        }
-        return { state: 'running' };
+        this.#parser.pauseAt = this.#steps.used + maxSteps;
+        if (!this.#parse.next().done) return { state: 'running' };
+        throw new Error('not implemented yet: the checker arrives in step 0.0.6');
       } catch (error) {
         if (!(error instanceof DiagnosticError)) throw error;
         this.#end = {
