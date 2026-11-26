@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "name.redefined",
+    "args": { "name": "count" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 3, "column": 7 },
+      "end": { "line": 3, "column": 12 }
+    }
+  }
+}

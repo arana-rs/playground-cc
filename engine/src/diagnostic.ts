@@ -1,6 +1,6 @@
 // A diagnostic is data, never text: the UI turns it into a message (design/errors.md#format).
 
-/** The syntax errors found so far; each one has its row in design/language.md#checks. */
+/** The syntax errors; each one has its row in design/language.md#checks. */
 export type SyntaxCode =
   | 'syntax.unterminated_comment'
   | 'syntax.unterminated_char'
@@ -24,11 +24,44 @@ export type SyntaxCode =
   | 'syntax.expected_declaration'
   | 'syntax.expected_statement'
   | 'syntax.invalid_type_specifiers'
-  | 'syntax.empty_declaration';
+  | 'syntax.empty_declaration'
+  | 'syntax.break_outside_loop'
+  | 'syntax.continue_outside_loop'
+  | 'syntax.case_outside_switch'
+  | 'syntax.duplicate_default'
+  | 'syntax.for_declaration';
+
+/** The name and type errors; each one has its row in design/language.md#checks. */
+export type CheckCode =
+  | 'name.undeclared'
+  | 'name.redefined'
+  | 'name.unnamed_parameter'
+  | 'name.undefined_function'
+  | 'name.missing_main'
+  | 'type.void_object'
+  | 'type.void_value'
+  | 'type.not_assignable'
+  | 'type.not_callable'
+  | 'type.too_few_arguments'
+  | 'type.too_many_arguments'
+  | 'type.argument_type'
+  | 'type.return_value_in_void'
+  | 'type.missing_return_value'
+  | 'type.conflicting_types'
+  | 'type.invalid_void_parameter'
+  | 'type.function_returning_function'
+  | 'type.invalid_initializer'
+  | 'type.invalid_main'
+  | 'type.not_constant'
+  | 'type.constant_overflow'
+  | 'type.duplicate_case';
 
 /** Every diagnostic code in use so far; each one has its row in design/errors.md. */
 export type DiagnosticCode =
   | SyntaxCode
+  | CheckCode
+  | 'unsupported.function'
+  | 'limit.static_data'
   | 'unsupported.construct'
   | 'unsupported.header'
   | 'directive.error'

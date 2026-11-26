@@ -1,4 +1,4 @@
-import type { TranslationUnit } from './ast';
+import { Checker, type Program } from './checker';
 import { type Diagnostic, DiagnosticError } from './diagnostic';
 import { Lexer } from './lexer';
 import type { Limits } from './limits';
@@ -34,7 +34,8 @@ export class Run {
   readonly #files: SourceFile[];
   readonly #limits: Readonly<Limits>;
   #parser: Parser | undefined;
-  #parse: Generator<void, TranslationUnit, void> | undefined;
+  #checker: Checker | undefined;
+  #beforeRun: Generator<void, Program, void> | undefined;
   #end: RunEnd | undefined;
 
   constructor(options: RunOptions) {
@@ -47,7 +48,7 @@ export class Run {
   advance(maxSteps: number): RunState {
     if (this.#end === undefined) {
       try {
-        if (this.#parser === undefined || this.#parse === undefined) {
+        if (this.#parser === undefined || this.#beforeRun === undefined) {
           this.#checkSourceSize();
           // One file until 0.9 (design/worker-protocol.md).
           const file = this.#files[0];
@@ -55,11 +56,13 @@ export class Run {
           const lexer = new Lexer(file, this.#steps);
           const tokens = new TokenStream(new Preprocessor(lexer, this.#steps), this.#steps);
           this.#parser = new Parser(tokens, this.#steps, this.#limits.nesting);
-          this.#parse = this.#parser.parse();
+          this.#beforeRun = this.#translate(this.#parser);
         }
-        this.#parser.pauseAt = this.#steps.used + maxSteps;
-        if (!this.#parse.next().done) return { state: 'running' };
-        throw new Error('not implemented yet: the checker arrives in step 0.0.6');
+        const pauseAt = this.#steps.used + maxSteps;
+        this.#parser.pauseAt = pauseAt;
+        if (this.#checker !== undefined) this.#checker.pauseAt = pauseAt;
+        if (!this.#beforeRun.next().done) return { state: 'running' };
+        throw new Error('not implemented yet: the interpreter arrives in step 0.0.7');
       } catch (error) {
         if (!(error instanceof DiagnosticError)) throw error;
         this.#end = {
@@ -69,6 +72,14 @@ export class Run {
       }
     }
     return { state: 'ended', end: this.#end };
+  }
+
+  /** Parsing, then checking: the steps before the run, paused between slices. */
+  *#translate(parser: Parser): Generator<void, Program, void> {
+    const unit = yield* parser.parse();
+    this.#checker = new Checker(unit, this.#steps, this.#limits);
+    this.#checker.pauseAt = parser.pauseAt;
+    return yield* this.#checker.check();
   }
 
   /** The program output written since the last call, as bytes. */

@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.constant_overflow",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 3, "column": 8 },
+      "end": { "line": 3, "column": 22 }
+    }
+  }
+}

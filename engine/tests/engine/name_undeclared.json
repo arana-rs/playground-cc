@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "name.undeclared",
+    "args": { "name": "totl" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 3, "column": 10 },
+      "end": { "line": 3, "column": 14 }
+    }
+  }
+}

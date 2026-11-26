@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.for_declaration",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 12 },
+      "end": { "line": 2, "column": 19 }
+    }
+  }
+}

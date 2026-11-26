@@ -49,7 +49,7 @@ function shape(value: unknown): unknown {
   if (typeof value !== 'object' || value === null) return value;
   return Object.fromEntries(
     Object.entries(value)
-      .filter(([key]) => key !== 'range' && key !== 'nameRange')
+      .filter(([key]) => !['range', 'nameRange', 'label'].includes(key))
       .map(([key, item]) => [key, shape(item)]),
   );
 }

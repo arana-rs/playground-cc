@@ -1,0 +1,5 @@
+{
+  "limits": { "staticData": 6 },
+  "output": "",
+  "diagnostic": { "code": "limit.static_data", "args": { "limit": 6 } }
+}

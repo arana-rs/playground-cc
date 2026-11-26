@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.function_returning_function",
+    "args": { "name": "f" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 1, "column": 5 },
+      "end": { "line": 1, "column": 18 }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.invalid_initializer",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 11 },
+      "end": { "line": 2, "column": 17 }
+    }
+  }
+}

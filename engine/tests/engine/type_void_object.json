@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.void_object",
+    "args": { "name": "nothing" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 8 },
+      "end": { "line": 2, "column": 15 }
+    }
+  }
+}

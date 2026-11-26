@@ -23,7 +23,7 @@ HEADING = re.compile(r"^#+\s+(.*)$", re.M)
 CATALOG_ROW = re.compile(r"^\| `([a-z]+\.[a-z_]+)` \|", re.M)
 CODE = re.compile(r"`([a-z]+\.[a-z_]+)`")
 # Backticked `area.reason` tokens that are not error codes (event names, file names).
-NOT_CODES: set[str] = set()
+NOT_CODES: set[str] = {"name.c", "name.in", "name.out", "name.status"}
 
 
 def slug(heading: str) -> str:

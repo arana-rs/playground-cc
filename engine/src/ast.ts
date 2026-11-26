@@ -118,8 +118,9 @@ export type Statement =
       range: Range;
     }
   | { kind: 'switch'; test: Expression; body: Statement; range: Range }
-  | { kind: 'case'; value: Expression; body: Statement; range: Range }
-  | { kind: 'default'; body: Statement; range: Range }
+  /** `label` is the range of `case value:` alone, without the statement after it. */
+  | { kind: 'case'; value: Expression; body: Statement; label: Range; range: Range }
+  | { kind: 'default'; body: Statement; label: Range; range: Range }
   | { kind: 'break'; range: Range }
   | { kind: 'continue'; range: Range }
   | { kind: 'return'; value?: Expression; range: Range };

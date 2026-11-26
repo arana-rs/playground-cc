@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.break_outside_loop",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 3 },
+      "end": { "line": 2, "column": 9 }
+    }
+  }
+}

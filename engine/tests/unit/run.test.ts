@@ -20,6 +20,35 @@ describe('Run', () => {
     });
   });
 
+  it('checks after parsing, with the same end whatever the slice size', () => {
+    const files = [{ name: 'main.c', text: 'int f(int x) {\n  return x + 1;\n}\n' }];
+    const end = (steps: number, slice: number) => {
+      const run = new Run({ files, limits: { ...LIMITS, steps } });
+      for (;;) {
+        const state = run.advance(slice);
+        if (state.state === 'ended') return state.end;
+      }
+    };
+    // 28 steps check the whole program: the checker's error ends it.
+    for (const slice of [1, 2, 3, 7, 1000]) {
+      expect(end(28, slice)).toEqual({
+        reason: 'diagnostic',
+        diagnostic: { code: 'name.missing_main', args: {} },
+      });
+    }
+    // One step fewer runs out on the last node the checker visits: the `1` on line 2.
+    for (const slice of [1, 3, 1000]) {
+      expect(end(27, slice)).toEqual({
+        reason: 'diagnostic',
+        diagnostic: {
+          code: 'limit.steps',
+          args: { limit: 27 },
+          range: { file: 'main.c', start: { line: 2, column: 14 }, end: { line: 2, column: 15 } },
+        },
+      });
+    }
+  });
+
   it('keeps its end once ended', () => {
     const run = new Run({
       files: [{ name: 'main.c', text: 'xx' }],

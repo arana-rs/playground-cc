@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.not_assignable",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 3, "column": 3 },
+      "end": { "line": 3, "column": 8 }
+    }
+  }
+}

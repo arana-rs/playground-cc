@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.return_value_in_void",
+    "args": { "function": "greet" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 10 },
+      "end": { "line": 2, "column": 11 }
+    }
+  }
+}

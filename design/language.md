@@ -48,7 +48,7 @@ Unmarked phases are MVP ([roadmap](roadmap.md)).
 
 - **`main`**: `int main(void)` and `int main()` from 0.1. With the `argc`/`argv` form, `argc` is 1, `argv[0]` is a modifiable `"main"` and `argv[1]` is `NULL`, as C17 requires. Reaching the end of `main` returns 0, as C17 says. The exit status is the value returned by `main` or passed to `exit`, modulo 256, as Linux reports it.
 - **Constants in 0.1**: a character constant is an `int`, as C17 says. A floating constant, or an integer constant whose type is not `int` (a suffix, or a value too large for `int`), is a construct of 0.2.
-- **String literals in 0.1 and 0.2** are accepted only as arguments of a library function (`printf`, `puts`); anywhere else they are an array, a construct of 0.3.
+- **String literals in 0.1 and 0.2** are accepted only as arguments of a library function (`printf`, `puts`), the argument itself and not part of one (`puts(c ? "a" : "b")` is not); anywhere else they are an array, a construct of 0.3. A `0` where a library function takes a string is a null pointer, a construct of 0.3 too.
 - **Directives**: the null directive (`#` alone) does nothing. `#error` stops before the run with `directive.error`, carrying `message`, its tokens as written (empty when there are none). `#line` is not supported. `#include` of a supported standard header declares its functions from that point on and defines its macros as glibc does (`EOF` is `(-1)`).
 
 ### Before its phase
@@ -71,7 +71,7 @@ A construct whose phase has not been released yet is reported like an unsupporte
 | `function_macro` | Function-like macros | 0.9 (1.0) |
 | `undef` | `#undef` | 0.9 (1.0) |
 | `conditional_directive` | `#if`, `#ifdef`, `#ifndef`, `#elif`, `#else`, `#endif`, `defined` | 0.9 (1.0) |
-| `function_pointer` | Function pointers | 0.10 (1.0) |
+| `function_pointer` | Function pointers, and a function's name used other than to call it | 0.10 (1.0) |
 
 ## Not supported
 
@@ -145,5 +145,32 @@ Each check of a constraint violation before the run ([standard and target](#stan
 | `syntax.expected_statement` | A declaration where only a statement may go: the body of `if`, `while`, `do` or `for`, or after a `case` or `default` label |
 | `syntax.invalid_type_specifiers` | More than one type specifier (`int int`, `void int`) |
 | `syntax.empty_declaration` | A declaration that declares nothing (`int;`) |
+| `syntax.break_outside_loop` | A `break` outside a loop or a `switch` |
+| `syntax.continue_outside_loop` | A `continue` outside a loop |
+| `syntax.case_outside_switch` | A `case` or `default` label outside a `switch`; the range is the label |
+| `syntax.duplicate_default` | A second `default` label in one `switch` |
+| `syntax.for_declaration` | A function declared in the first clause of a `for` |
+| `name.undeclared` | A name used where no declaration of it is in scope, a function included (C17 has no implicit declarations); carries `name` |
+| `name.redefined` | A name declared twice in one scope, other than repeated declarations of a function, or a function defined twice; carries `name`. Parameters share a scope with the outermost block of their function |
+| `name.unnamed_parameter` | A parameter without a name in a function definition |
+| `name.undefined_function` | A function called but defined nowhere, which a native build reports when linking; carries `name`; the range is its first call |
+| `name.missing_main` | A program without a definition of `main`; no range |
+| `type.void_object` | A variable of type `void`; carries `name` |
+| `type.void_value` | The value of a `void` expression used: in an operator, a condition, an initializer, an argument or a `return` |
+| `type.not_assignable` | An assignment, `++` or `--` on something other than a variable |
+| `type.not_callable` | A call of something other than a function |
+| `type.too_few_arguments` | A call with fewer arguments than its function's parameters; carries `function` |
+| `type.too_many_arguments` | A call with more arguments than its function's parameters, `()` being none; carries `function`; the range is the first extra argument |
+| `type.argument_type` | An argument of the wrong type for a library function's parameter (`puts(42)`, `putchar("a")`); carries `function` and `position`, from 1 |
+| `type.return_value_in_void` | A `return` with a value, even a `void` one, in a `void` function; carries `function` |
+| `type.missing_return_value` | A `return` without a value in a function that returns `int`; carries `function` |
+| `type.conflicting_types` | A function declared again with another type, a header's declaration included; carries `name` |
+| `type.invalid_void_parameter` | `void` as a parameter other than the whole list (`(void x)`, `(int a, void)`) |
+| `type.function_returning_function` | A declarator with two parameter lists (`f(void)(void)`); carries `name` |
+| `type.invalid_initializer` | An initializer for a function, or braces around a scalar's initializer holding other than one expression |
+| `type.invalid_main` | `main` declared otherwise than `int main(void)` or `int main()` |
+| `type.not_constant` | A `case` value that is not an integer constant expression: a variable, a call, an assignment, `++`, `--`, the comma operator, or a division by zero, outside an operand left unevaluated (`0 && x`) |
+| `type.constant_overflow` | A `case` value whose computation goes past the range of `int` |
+| `type.duplicate_case` | Two `case` labels with the same value in one `switch`; carries `value` |
 
 - **Character constants** get the value GCC gives them: one byte is a signed `char`; several (`'ab'`, a non-ASCII character) make an `int` with each byte shifted in, the last four kept.

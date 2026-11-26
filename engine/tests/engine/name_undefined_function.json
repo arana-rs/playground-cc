@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "name.undefined_function",
+    "args": { "name": "helper" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 4, "column": 10 },
+      "end": { "line": 4, "column": 16 }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.duplicate_case",
+    "args": { "value": 1 },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 5, "column": 8 },
+      "end": { "line": 5, "column": 13 }
+    }
+  }
+}

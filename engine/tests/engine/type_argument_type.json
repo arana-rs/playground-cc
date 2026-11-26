@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.argument_type",
+    "args": { "function": "puts", "position": 1 },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 4, "column": 8 },
+      "end": { "line": 4, "column": 10 }
+    }
+  }
+}

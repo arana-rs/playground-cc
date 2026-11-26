@@ -6,7 +6,7 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 
 ## Format
 
-- **A diagnostic is data, never text**: `code`, `args`, `range`, and `stack` for those raised during the run; `range` and `stack` are left out when no source location applies, as in `engine.internal`, `limit.source` and `limit.static_data`. The engine never produces message text; the UI turns a diagnostic into a message with the message catalogs ([architecture](architecture.md#components)).
+- **A diagnostic is data, never text**: `code`, `args`, `range`, and `stack` for those raised during the run; `range` and `stack` are left out when no source location applies, as in `engine.internal`, `limit.source`, `limit.static_data` and `name.missing_main`. The engine never produces message text; the UI turns a diagnostic into a message with the message catalogs ([architecture](architecture.md#components)).
 - **Code**: `area.reason`, lower case, the reason in snake case. A code never changes meaning; a new meaning gets a new code.
 - **Args**: named values, strings or numbers, that fill the placeholders of the code's message. Identifiers, types and source text go as written in C (`count`, `unsigned long`), never translated; only fixed keys, like `construct`, are translated. A type is written with its `typedef` names, never expanded, as GCC writes it, everywhere a type is shown, except `ptype`, which expands only its outer level ([debugger](debugger.md#commands)). A string arg longer than the text length limit is cut with `…` ([limits](limits.md#run-limits)).
 - **Range**: the file name, and the start and end line and column, 1-based. The end is exclusive, so a range where start equals end marks a point (the end of the file, for example). Columns count UTF-16 code units, the unit of JavaScript strings and of the editor.
@@ -22,7 +22,7 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 | Code | When | Rule |
 |---|---|---|
 | `unsupported.construct` | Before the run: a C construct the engine does not support; carries `construct`, a fixed key the catalogs translate (`goto`, `vla`), and its range covers the whole construct. Also answers a construct whose phase has not been released yet | [language](language.md#not-supported) |
-| `unsupported.function` | Before the run: the program uses a C17 standard library function outside the subset; carries `name` | [libc](libc.md#headers-and-functions) |
+| `unsupported.function` | Before the run: the program calls a C17 standard library function outside the subset; carries `name` | [libc](libc.md#headers-and-functions) |
 | `unsupported.header` | Before the run: a standard header outside the subset, or any other system header; carries `header` | [libc](libc.md#headers-and-functions) |
 | `directive.error` | Before the run: an `#error` directive; carries `message`, its tokens as written | [language](language.md#supported-by-phase) |
 | `syntax.unterminated_comment` | Before the run: a comment that never ends | [language](language.md#checks) |
@@ -48,6 +48,33 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 | `syntax.expected_statement` | Before the run: a declaration where only a statement may go | [language](language.md#checks) |
 | `syntax.invalid_type_specifiers` | Before the run: more than one type specifier | [language](language.md#checks) |
 | `syntax.empty_declaration` | Before the run: a declaration that declares nothing | [language](language.md#checks) |
+| `syntax.break_outside_loop` | Before the run: a `break` outside a loop or `switch` | [language](language.md#checks) |
+| `syntax.continue_outside_loop` | Before the run: a `continue` outside a loop | [language](language.md#checks) |
+| `syntax.case_outside_switch` | Before the run: a `case` or `default` label outside a `switch` | [language](language.md#checks) |
+| `syntax.duplicate_default` | Before the run: a second `default` in one `switch` | [language](language.md#checks) |
+| `syntax.for_declaration` | Before the run: a function declared in a `for` | [language](language.md#checks) |
+| `name.undeclared` | Before the run: a name with no declaration in scope; carries `name` | [language](language.md#checks) |
+| `name.redefined` | Before the run: a name declared twice in one scope, or a function defined twice; carries `name` | [language](language.md#checks) |
+| `name.unnamed_parameter` | Before the run: a parameter without a name in a function definition | [language](language.md#checks) |
+| `name.undefined_function` | Before the run: a function called but defined nowhere; carries `name` | [language](language.md#checks) |
+| `name.missing_main` | Before the run: no `main` function | [language](language.md#checks) |
+| `type.void_object` | Before the run: a variable of type `void`; carries `name` | [language](language.md#checks) |
+| `type.void_value` | Before the run: the value of a `void` expression used | [language](language.md#checks) |
+| `type.not_assignable` | Before the run: an assignment, `++` or `--` on something other than a variable | [language](language.md#checks) |
+| `type.not_callable` | Before the run: a call of something other than a function | [language](language.md#checks) |
+| `type.too_few_arguments` | Before the run: too few arguments in a call; carries `function` | [language](language.md#checks) |
+| `type.too_many_arguments` | Before the run: too many arguments in a call; carries `function` | [language](language.md#checks) |
+| `type.argument_type` | Before the run: an argument of the wrong type for a library function; carries `function` and `position` | [language](language.md#checks) |
+| `type.return_value_in_void` | Before the run: a `return` with a value in a `void` function; carries `function` | [language](language.md#checks) |
+| `type.missing_return_value` | Before the run: a `return` without a value in a function that returns `int`; carries `function` | [language](language.md#checks) |
+| `type.conflicting_types` | Before the run: a function declared again with another type; carries `name` | [language](language.md#checks) |
+| `type.invalid_void_parameter` | Before the run: `void` as a parameter other than the whole list | [language](language.md#checks) |
+| `type.function_returning_function` | Before the run: a function declared to return a function; carries `name` | [language](language.md#checks) |
+| `type.invalid_initializer` | Before the run: an initializer that cannot initialize what it is for | [language](language.md#checks) |
+| `type.invalid_main` | Before the run: `main` declared in a form 0.1 does not accept | [language](language.md#checks) |
+| `type.not_constant` | Before the run: a `case` value that is not an integer constant expression | [language](language.md#checks) |
+| `type.constant_overflow` | Before the run: a constant expression past the range of `int` | [language](language.md#checks) |
+| `type.duplicate_case` | Before the run: two `case` labels with the same value; carries `value` | [language](language.md#checks) |
 | `limit.steps` | During or before the run: the program, or the steps before it, used up the step budget; carries `limit`, the budget | [engine](engine.md#execution-model) |
 | `ub.division_by_zero` | During the run: integer division or remainder by zero | [language](language.md#undefined-behavior) |
 | `ub.uninitialized_read` | During the run: reading a value with bytes never written; carries `name` for a variable | [memory](memory.md#blocks) |

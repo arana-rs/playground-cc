@@ -507,15 +507,15 @@ export class Parser {
           while (!this.#is(':') && this.#peek().kind !== 'eof') yield* this.#take();
           throw unsupported('extension', span(start.range, this.#peek().range));
         }
-        yield* this.#expect(':');
+        const label = span(start.range, (yield* this.#expect(':')).range);
         const body = yield* this.#statement();
-        return { kind: 'case', value, body, range: span(start.range, body.range) };
+        return { kind: 'case', value, body, label, range: span(start.range, body.range) };
       }
       case 'default': {
         yield* this.#take();
-        yield* this.#expect(':');
+        const label = span(start.range, (yield* this.#expect(':')).range);
         const body = yield* this.#statement();
-        return { kind: 'default', body, range: span(start.range, body.range) };
+        return { kind: 'default', body, label, range: span(start.range, body.range) };
       }
       case 'break':
       case 'continue': {

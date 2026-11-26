@@ -9,6 +9,8 @@ export interface Limits {
   text: number;
   /** Nesting depth of expressions, statements and declarators (`limit.nesting`). */
   nesting: number;
+  /** Static data in bytes: globals, `static` variables and string literals (`limit.static_data`). */
+  staticData: number;
 }
 
 export const LIMITS: Readonly<Limits> = {
@@ -16,4 +18,5 @@ export const LIMITS: Readonly<Limits> = {
   source: 256 * 1024, // provisional
   text: 200, // chosen
   nesting: 256, // provisional
+  staticData: 16 * 1024 * 1024, // provisional
 };

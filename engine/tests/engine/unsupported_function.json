@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "unsupported.function",
+    "args": { "name": "strlen" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 4, "column": 11 },
+      "end": { "line": 4, "column": 17 }
+    }
+  }
+}

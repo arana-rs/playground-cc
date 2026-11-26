@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.conflicting_types",
+    "args": { "name": "twice" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 6 },
+      "end": { "line": 2, "column": 11 }
+    }
+  }
+}

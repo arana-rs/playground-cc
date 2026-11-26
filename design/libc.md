@@ -21,7 +21,7 @@ The subset of the C17 standard library the engine provides, and how it behaves. 
 | 0.10 (1.0) | `<time.h>` | `time`, `clock`, `difftime`, `CLOCKS_PER_SEC` ([determinism](#determinism)) |
 | 0.10 (1.0) | `<assert.h>` | `assert`, honoring `NDEBUG` |
 
-- **Outside the subset**, before the run: a C17 standard header the subset does not have yet, or any other system header (`<unistd.h>`, `<pthread.h>`), stops with `unsupported.header`; a call to a C17 standard library function outside the subset stops with `unsupported.function` ([errors](errors.md)), whether or not its header was included: the engine knows every C17 library name, so this comes before the undeclared-function error.
+- **Outside the subset**, before the run: a C17 standard header the subset does not have yet, or any other system header (`<unistd.h>`, `<pthread.h>`), stops with `unsupported.header`; a call to a C17 standard library function outside the subset stops with `unsupported.function` ([errors](errors.md)), whether or not its header was included: the engine knows every C17 library name, so this comes before the undeclared-function error. A function the program defines is its own, whatever its name. One it only declares is the library's: a subset function declared with its type works without its header, and any other C17 library function stops with `unsupported.function` at its first call.
 - **Files** (planned): `fopen` and the other file functions over an in-browser file system. Until then `stdout` is the only output stream and `stdin` the only input stream, read by `scanf`, `getchar` and `fgets`.
 
 ## printf

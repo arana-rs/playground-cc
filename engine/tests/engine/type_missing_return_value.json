@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "type.missing_return_value",
+    "args": { "function": "answer" },
+    "range": {
+      "file": "main.c",
+      "start": { "line": 2, "column": 3 },
+      "end": { "line": 2, "column": 10 }
+    }
+  }
+}
