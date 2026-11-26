@@ -1,0 +1,5 @@
+{
+  "limits": { "source": 16 },
+  "output": "",
+  "diagnostic": { "code": "limit.source", "args": { "limit": 16 } }
+}

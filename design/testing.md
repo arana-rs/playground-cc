@@ -29,6 +29,7 @@ The kinds of tests, the oracle tests against GCC and Clang, and CI. All of this 
 ## Engine tests
 
 - **A case** is a program, optionally its input, and its expected end as JSON: the output written, then either the diagnostic (code, args, range and, during the run, stack, [errors](errors.md#format)) or the exit status and the [leak report](memory.md#leak-report).
+- **Limits** are the release's ([limits](limits.md)) unless a case sets some of them in its JSON (`limits`), so a short program can reach a limit.
 - Every diagnostic code has at least one case, and every undefined behavior a phase detects is in its exit tests ([roadmap](roadmap.md)).
 - They run against the engine only: native builds of these programs have undefined behavior or do not compile.
 
