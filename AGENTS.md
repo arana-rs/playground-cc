@@ -1,7 +1,12 @@
 # AGENTS.md
 
 playground-cc: browser-based C playground. The repo is in the specification
-phase: `design/` is the product; no code exists yet.
+phase: `design/` is the product; no playground code exists yet.
+
+Two kinds of documentation, never mixed:
+- `design/` is the spec: the target, up to 1.0 and beyond.
+- `docs/` is the Starlight docs site: only what is built and released
+  (the last phase closed on `main`). See `design/docs-site.md`.
 
 ## Read first
 - `design/README.md`: principles and the map of fragments. Read it, then only the
@@ -22,8 +27,15 @@ phase: `design/` is the product; no code exists yet.
 - After every edit: `python3 design/check_links.py` (must report 0 broken links and
   0 error code problems). A new error code goes in `design/errors.md`.
 
+## Working on the docs site
+- Document a feature in `docs/` only in the change that closes its phase;
+  never document a later phase, "(planned)" or unbuilt behavior.
+- Every page exists in `en` (root) and `es` (`es/`); change both together.
+- After every edit: `pnpm --filter docs build` (must succeed).
+
 ## Language
-- Code, identifiers, comments, logs, commits and docs are in English.
+- Code, identifiers, comments, logs, commits and the spec (`design/`) are in
+  English; the docs site (`docs/`) is in `en` and `es`.
 - UI strings live only in the message catalogs (`es`, `en`); never hardcoded.
 
 ## Git

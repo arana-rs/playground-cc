@@ -1,6 +1,6 @@
 # Deployment
 
-> Part of the [playground-cc spec](README.md). Related: [frontend](frontend.md), [security](security.md), [offline](offline.md).
+> Part of the [playground-cc spec](README.md). Related: [frontend](frontend.md), [security](security.md), [offline](offline.md), [docs site](docs-site.md).
 
 ## What the repository ships
 
@@ -22,4 +22,8 @@
 The project owner's own stack, not part of the repository.
 - static-web-server runs from the Compose file on a self-managed VPS, published on `127.0.0.1` only, behind the owner's reverse proxy.
 - The proxy holds TLS and the hostname, redirects plain HTTP to HTTPS, passes static-web-server's headers through unchanged and adds HSTS.
-- **Deploys are by hand**: the owner builds a tagged commit from a clean checkout, installing with the lockfile frozen, and copies the build to the VPS. CI holds no deploy credentials ([security](security.md#dependencies)).
+- **Deploys are by hand, on the VPS**: the owner clones the repository, checks out a release tag, installs with the lockfile frozen, builds the site and starts the Compose file. CI holds no credentials for the VPS ([security](security.md#dependencies)).
+
+## The docs site
+
+The docs site is not served by the Compose file: it is published to GitHub Pages, on an origin separate from the playground's ([docs site](docs-site.md#hosting)).

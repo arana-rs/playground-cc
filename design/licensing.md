@@ -1,6 +1,6 @@
 # Licensing
 
-> Part of the [playground-cc spec](README.md). Related: [libc](libc.md), [frontend](frontend.md), [frontend screens](frontend-screens.md), [offline](offline.md), [testing](testing.md#ci), [deployment](deployment.md).
+> Part of the [playground-cc spec](README.md). Related: [libc](libc.md), [frontend](frontend.md), [frontend screens](frontend-screens.md), [offline](offline.md), [testing](testing.md#ci), [deployment](deployment.md), [docs site](docs-site.md).
 
 playground-cc is **AGPL-3.0** ([LICENSE](../LICENSE)). Everything the site ships must be compatible with it, the site carries every notice its parts require, and every visitor can get its source.
 
@@ -17,7 +17,7 @@ playground-cc is **AGPL-3.0** ([LICENSE](../LICENSE)). Everything the site ships
   - weak copyleft: `LGPL-2.1-or-later`, `LGPL-3.0-only`, `LGPL-3.0-or-later`, `MPL-2.0`;
   - strong copyleft: `GPL-2.0-or-later`, `GPL-3.0-only`, `GPL-3.0-or-later`, `AGPL-3.0-only`, `AGPL-3.0-or-later`.
 - **Not allowed**: `GPL-2.0-only`, `LGPL-2.1-only` and `MPL-2.0-no-copyleft-exception` (incompatible with AGPL-3.0), non-commercial or source-available licenses, and anything without a license.
-- **Enforced by the build, not by review**: the build lists the packages whose modules end up in the bundle, whether they are declared as dependencies or development dependencies, and checks their licenses against the allowlist kept in the repo. It runs in CI ([testing](testing.md#ci)) and fails on any license outside the list. Adding a license to the list is a deliberate change to that file. Development tools that put nothing in the bundle are not checked.
+- **Enforced by the build, not by review**: the build lists the packages whose modules end up in the bundle, whether they are declared as dependencies or development dependencies, and checks their licenses against the allowlist kept in the repo. It runs in CI ([testing](testing.md#ci)) and fails on any license outside the list. Adding a license to the list is a deliberate change to that file. Development tools that put nothing in the bundle are not checked. The docs site is a separate site, outside this check: the packages it ships to its visitors (Astro, Starlight, Pagefind) are checked against the list by hand when adopted ([docs site](docs-site.md)).
 - **Copied, ported and generated code** is not a package, so the check cannot see it. Copied or ported code lives in its own directory with the original license file beside it and keeps its original copyright headers; adopting it means checking that license against the list by hand. Today this is the shadcn/ui components copied into `web/` (MIT, [frontend](frontend.md#technologies)) and the transcendental math functions ported from musl (MIT, [libc](libc.md#math)). Code that a build tool generates into the bundle (Paraglide's runtime and message functions) carries that tool's license, checked against the list by hand when the tool is adopted, like copied code.
 
 ## Notices and source (AGPL sections 6 and 13)
