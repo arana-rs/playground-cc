@@ -49,7 +49,7 @@ Unmarked phases are MVP ([roadmap](roadmap.md)).
 - **`main`**: `int main(void)` and `int main()` from 0.1. With the `argc`/`argv` form, `argc` is 1, `argv[0]` is a modifiable `"main"` and `argv[1]` is `NULL`, as C17 requires. Reaching the end of `main` returns 0, as C17 says. The exit status is the value returned by `main` or passed to `exit`, modulo 256, as Linux reports it.
 - **Constants in 0.1**: a character constant is an `int`, as C17 says. A floating constant, or an integer constant whose type is not `int` (a suffix, or a value too large for `int`), is a construct of 0.2.
 - **String literals in 0.1 and 0.2** are accepted only as arguments of a library function (`printf`, `puts`); anywhere else they are an array, a construct of 0.3.
-- **Directives**: the null directive (`#` alone) does nothing. `#error` stops before the run with `directive.error`, carrying `message`, its tokens as written (empty when there are none). `#line` is not supported.
+- **Directives**: the null directive (`#` alone) does nothing. `#error` stops before the run with `directive.error`, carrying `message`, its tokens as written (empty when there are none). `#line` is not supported. `#include` of a supported standard header declares its functions from that point on and defines its macros as glibc does (`EOF` is `(-1)`).
 
 ### Before its phase
 
@@ -98,7 +98,7 @@ Each of these stops the program before it starts with `unsupported.construct` ([
 | `old_style_definition` | Old-style (K&R) function definitions |
 | `integer_to_pointer` | Converting an integer to a pointer, other than a null pointer constant ([memory](memory.md#pointers)) |
 | `wide_char` | Wide and Unicode character constants and strings (`L`, `u`, `U`, `u8` prefixes) |
-| `pragma` | Any `#pragma`, `#pragma once` included (header guards with `#ifndef` replace it) |
+| `pragma` | Any `#pragma`, `#pragma once` included (header guards with `#ifndef` replace it), and the `_Pragma` operator |
 | `line_directive` | `#line` |
 | `extension` | GNU extensions (`__attribute__`, statement expressions, `typeof`, case ranges, nested functions, zero-length arrays) |
 
@@ -133,5 +133,9 @@ Each check of a constraint violation before the run ([standard and target](#stan
 | `syntax.empty_char_constant` | `''` |
 | `syntax.invalid_number` | A number that is neither an integer nor a floating constant (`09`, `1x`, `0x`, `1e`, `1lL`); carries `number` |
 | `syntax.constant_too_large` | An integer constant no type of its list holds (C17 6.4.4.1); carries `number` |
+| `syntax.invalid_directive` | A `#` starting a line followed by a name C17 has no directive for (`#warning`, `#include_next`, `# 12`); carries `directive` |
+| `syntax.invalid_include` | An `#include` not followed by a header name (`<stdio.h>` or `"file.h"`) |
+| `syntax.extra_tokens` | Tokens after a directive's last one (`#include <stdio.h> x`); carries `directive` |
+| `syntax.directive_whitespace` | A form feed or vertical tab between the tokens of a directive (C17 6.10) |
 
 - **Character constants** get the value GCC gives them: one byte is a signed `char`; several (`'ab'`, a non-ASCII character) make an `int` with each byte shifted in, the last four kept.

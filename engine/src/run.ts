@@ -1,6 +1,7 @@
 import { type Diagnostic, DiagnosticError } from './diagnostic';
 import { Lexer } from './lexer';
 import type { Limits } from './limits';
+import { Preprocessor } from './preprocessor';
 import { SourceFile, utf8Length } from './source';
 import { Steps } from './steps';
 import { TokenStream } from './tokens';
@@ -48,12 +49,13 @@ export class Run {
           // One file until 0.9 (design/worker-protocol.md).
           const file = this.#files[0];
           if (file === undefined) throw new Error('a run needs a file');
-          this.#tokens = new TokenStream(new Lexer(file, this.#steps), this.#steps);
+          const lexer = new Lexer(file, this.#steps);
+          this.#tokens = new TokenStream(new Preprocessor(lexer, this.#steps), this.#steps);
         }
         const stop = this.#steps.used + maxSteps;
         while (this.#steps.used < stop) {
           if (this.#tokens.next().kind === 'eof') {
-            throw new Error('not implemented yet: the preprocessor arrives in step 0.0.4');
+            throw new Error('not implemented yet: the parser arrives in step 0.0.5');
           }
         }
         return { state: 'running' };

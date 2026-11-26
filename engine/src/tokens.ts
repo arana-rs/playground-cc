@@ -32,10 +32,12 @@ export type Token = (
   | { kind: 'string'; bytes: Uint8Array }
   /** Spelled without digraphs: `<:` is `[`. */
   | { kind: 'punctuator'; punctuator: string }
+  /** An `#include` of a supported standard header (`stdio.h`): its declarations start here. */
+  | { kind: 'include'; header: string }
   | { kind: 'eof' }
 ) & { range: Range };
 
-/** Where tokens come from: the lexer, or the preprocessor's output. */
+/** Where tokens come from: the preprocessor's output. */
 export interface PPTokenSource {
   next(): PPToken;
 }
@@ -101,7 +103,7 @@ export class TokenStream {
       case 'eof':
         return { kind: 'eof', range };
       case 'header':
-        throw new Error('a header name reached the tokens: only #include reads one');
+        return { kind: 'include', header: token.text.slice(1, -1), range };
     }
   }
 

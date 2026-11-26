@@ -12,12 +12,18 @@ export type SyntaxCode =
   | 'syntax.escape_out_of_range'
   | 'syntax.empty_char_constant'
   | 'syntax.invalid_number'
-  | 'syntax.constant_too_large';
+  | 'syntax.constant_too_large'
+  | 'syntax.invalid_directive'
+  | 'syntax.invalid_include'
+  | 'syntax.extra_tokens'
+  | 'syntax.directive_whitespace';
 
 /** Every diagnostic code in use so far; each one has its row in design/errors.md. */
 export type DiagnosticCode =
   | SyntaxCode
   | 'unsupported.construct'
+  | 'unsupported.header'
+  | 'directive.error'
   | 'engine.internal'
   | 'limit.source'
   | 'limit.steps';

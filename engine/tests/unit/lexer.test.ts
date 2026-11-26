@@ -170,6 +170,11 @@ describe('Lexer', () => {
     ]);
   });
 
+  it('marks a form feed or vertical tab before a token on its line', () => {
+    const tokens = lexAll('a\fb\n\vc\nd');
+    expect(tokens.map((token) => token.formFeedBefore)).toEqual([false, true, true, false]);
+  });
+
   it('reports an unterminated comment at its start', () => {
     expect(lexError('x\n  /* never closed')).toEqual({
       code: 'syntax.unterminated_comment',

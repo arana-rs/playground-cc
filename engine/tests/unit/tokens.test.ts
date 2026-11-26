@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { type Diagnostic, DiagnosticError } from '../../src/diagnostic';
 import { Lexer } from '../../src/lexer';
+import { Preprocessor } from '../../src/preprocessor';
 import { SourceFile } from '../../src/source';
 import { Steps } from '../../src/steps';
 import { type Token, TokenStream } from '../../src/tokens';
@@ -72,6 +73,13 @@ describe('TokenStream', () => {
     });
     expect(code('\\ud800')).toBe('syntax.invalid_ucn');
     expect(code('\\U00110000')).toBe('syntax.invalid_ucn');
+  });
+
+  it('turns an included header into an include token', () => {
+    const steps = new Steps(100);
+    const lexer = new Lexer(new SourceFile('main.c', '#include <stdio.h>'), steps);
+    const tokens = new TokenStream(new Preprocessor(lexer, steps), steps);
+    expect(tokens.next()).toMatchObject({ kind: 'include', header: 'stdio.h' });
   });
 
   it('spells punctuators without digraphs', () => {

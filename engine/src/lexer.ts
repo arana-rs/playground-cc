@@ -27,6 +27,8 @@ export interface PPToken {
   lineStart: boolean;
   /** Whitespace or a comment comes before it. */
   spaceBefore: boolean;
+  /** A form feed or vertical tab comes before it on its line, which no directive may hold. */
+  formFeedBefore: boolean;
 }
 
 const TRIGRAPHS: Record<string, string> = {
@@ -178,6 +180,7 @@ export class Lexer {
   #index = 0;
   #lineStart = true;
   #spaceBefore = false;
+  #formFeedBefore = false;
 
   constructor(file: SourceFile, steps: Steps) {
     this.#logical = new LogicalText(file);
@@ -249,9 +252,11 @@ export class Lexer {
         if (sameLine) return false;
         this.#lineStart = true;
         this.#spaceBefore = true;
+        this.#formFeedBefore = false;
         this.#index++;
       } else if (char === ' ' || char === '\t' || char === '\v' || char === '\f' || char === '\r') {
         this.#spaceBefore = true;
+        if (char === '\v' || char === '\f') this.#formFeedBefore = true;
         this.#index++;
       } else if (char === '/' && text.charAt(this.#index + 1) === '*') {
         const close = text.indexOf('*/', this.#index + 2);
@@ -289,10 +294,12 @@ export class Lexer {
       end: to,
       lineStart: this.#lineStart,
       spaceBefore: this.#spaceBefore,
+      formFeedBefore: this.#formFeedBefore,
     };
     this.#index = end;
     this.#lineStart = false;
     this.#spaceBefore = false;
+    this.#formFeedBefore = false;
     return token;
   }
 

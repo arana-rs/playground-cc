@@ -36,6 +36,10 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 | `syntax.empty_char_constant` | Before the run: an empty character constant | [language](language.md#checks) |
 | `syntax.invalid_number` | Before the run: a malformed number; carries `number` | [language](language.md#checks) |
 | `syntax.constant_too_large` | Before the run: an integer constant too large for every type; carries `number` | [language](language.md#checks) |
+| `syntax.invalid_directive` | Before the run: a directive C17 does not have; carries `directive` | [language](language.md#checks) |
+| `syntax.invalid_include` | Before the run: an `#include` without a header name | [language](language.md#checks) |
+| `syntax.extra_tokens` | Before the run: tokens after the end of a directive; carries `directive` | [language](language.md#checks) |
+| `syntax.directive_whitespace` | Before the run: a form feed or vertical tab inside a directive | [language](language.md#checks) |
 | `limit.steps` | During or before the run: the program, or the steps before it, used up the step budget; carries `limit`, the budget | [engine](engine.md#execution-model) |
 | `ub.division_by_zero` | During the run: integer division or remainder by zero | [language](language.md#undefined-behavior) |
 | `ub.uninitialized_read` | During the run: reading a value with bytes never written; carries `name` for a variable | [memory](memory.md#blocks) |

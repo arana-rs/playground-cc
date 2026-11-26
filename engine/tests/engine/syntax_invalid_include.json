@@ -1,0 +1,12 @@
+{
+  "output": "",
+  "diagnostic": {
+    "code": "syntax.invalid_include",
+    "args": {},
+    "range": {
+      "file": "main.c",
+      "start": { "line": 1, "column": 10 },
+      "end": { "line": 1, "column": 15 }
+    }
+  }
+}
