@@ -1,0 +1,44 @@
+# Regenerates the oracle tests' expected results when the corpus or the compiler image changes,
+# and fails if any differs from the committed one (design/testing.md#oracle-tests).
+name: oracle
+
+on:
+  push:
+    paths:
+      - engine/tests/oracle/**
+      - .github/workflows/oracle.yml
+  pull_request:
+    paths:
+      - engine/tests/oracle/**
+      - .github/workflows/oracle.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: oracle-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Builds the compiler image (pinned by digest, compilers from a dated snapshot) and runs every
+      # case in it, with no network and with CPU, memory and time limits; a rejected case fails.
+      # The expected files are written afresh, so one whose case is gone shows as deleted.
+      - run: |
+          rm -f engine/tests/oracle/*.out engine/tests/oracle/*.status
+          engine/tests/oracle/generate.sh
+      - name: The expected results must be the committed ones
+        run: |
+          changes=$(git status --porcelain -- engine/tests/oracle)
+          if [ -n "$changes" ]; then
+            echo "$changes"
+            git diff --stat -- engine/tests/oracle
+            echo "::error::Regenerated oracle results differ from the committed ones; run pnpm --filter engine oracle:generate and commit them."
+            exit 1
+          fi

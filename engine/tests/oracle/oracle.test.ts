@@ -31,6 +31,10 @@ describe('oracle tests', () => {
       // Input arrives in 0.4 (design/roadmap.md).
       expect(existsSync(join(dir, `${name}.in`)), `${name}.in`).toBe(false);
     }
+    // Expected results of a case that is gone would linger unchecked.
+    for (const file of readdirSync(dir).filter((name) => /\.(out|status|in)$/.test(name))) {
+      expect(cases, file).toContain(file.replace(/\.[a-z]+$/, ''));
+    }
   });
 
   for (const name of cases) {

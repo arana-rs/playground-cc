@@ -57,9 +57,9 @@ Random programs from Csmith compared against GCC ([roadmap](roadmap.md#in-the-ro
 
 ## CI
 
-- **On every push**: Biome, the TypeScript check, the unit, oracle, engine, robustness and end-to-end tests, the dependency license check ([licensing](licensing.md#allowed-licenses)), and `python3 design/check_links.py`.
-- **When the corpus or the compiler image changed**, also the oracle regeneration.
+- **On every push and pull request** (`.github/workflows/ci.yml`): Biome, the TypeScript check, the unit, oracle, engine, robustness and end-to-end tests, the dependency license check ([licensing](licensing.md#allowed-licenses)), and `python3 design/check_links.py`: what `pnpm check` runs. The robustness test runs twice: with its fixed seed, and with 20,000 runs from a seed of the run's own (`ROBUSTNESS_SEED`), so each run tries new sources and a failure names the seed that reproduces it ([robustness](#robustness)).
+- **When the corpus or the compiler image changed** (`.github/workflows/oracle.yml`, on changes under `engine/tests/oracle/`), also the oracle regeneration: `generate.sh` builds the image and regenerates every case, and the job fails on a rejected case, on any expected file that differs from the committed one, or on one whose case is gone (the oracle test refuses those too, on every push).
 - **On pushes to `main` that change the docs site**, its build and deploy to GitHub Pages ([docs site](docs-site.md#hosting)).
 - **Hardened**: actions are pinned by commit hash, and pull requests run with a read-only token and no secrets ([security](security.md#dependencies)). The native builds of the oracle and fuzzing programs run with CPU, memory and time limits and no network.
-- The end-to-end tests also start the Compose file's static-web-server image, next to the CI container.
-- Runs on x86-64 Linux ([language](language.md#standard-and-target)) in a container image pinned by digest, which holds the GCC and Clang the expected results come from. Changing a compiler version is a change to that image, and its new expected results show in review.
+- **Where**: on x86-64 Linux ([language](language.md#standard-and-target)), GitHub's Ubuntu 24.04 runner, with Node 24 and the pnpm version the workspace names. The oracle regeneration runs in the compiler image, which holds the GCC and Clang the expected results come from: its base is pinned by digest and its compilers come at exact versions from a dated snapshot ([oracle tests](#oracle-tests)), so changing a compiler version is a change to its `Dockerfile`, and its new expected results show in review. The end-to-end tests start the Compose file's static-web-server image with the runner's Docker.
+- A newer push to the same branch or pull request cancels the older run.

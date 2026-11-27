@@ -143,30 +143,41 @@ function noise(next: (n: number) => number): string {
 
 const RUNS = Number(process.env.ROBUSTNESS_RUNS ?? 3000);
 const SEED = Number(process.env.ROBUSTNESS_SEED ?? 1);
+/**
+ * The seed folded into 32 bits, so a large one (CI passes its run id) still gives each run its own
+ * generator: in doubles, a product past 2^53 would round neighboring runs to the same seed.
+ */
+const SEED32 = (SEED ^ Math.floor(SEED / 2 ** 32)) >>> 0;
+/** Time for the runs, ample for a slow machine: a run takes well under a millisecond here. */
+const TIMEOUT_MS = Math.max(10_000, RUNS * 5);
 
 describe('robustness', () => {
-  it(`ends ${RUNS} random and mutated programs in an exit or a diagnostic (seed ${SEED})`, () => {
-    for (let i = 0; i < RUNS; i++) {
-      const next = random(SEED * 1_000_003 + i);
-      const text = next(10) === 0 ? noise(next) : mutate(next);
-      // Small slices pause the steps before the run too; large ones run whole programs.
-      const slice = next(2) === 0 ? 50 : 5000;
-      try {
-        const run = new Run({
-          files: [{ name: 'main.c', text }],
-          limits: { ...LIMITS, steps: 20_000, output: 4096 },
-        });
-        let state = run.advance(1 + next(slice));
-        while (state.state === 'running') {
-          run.takeOutput();
-          state = run.advance(1 + next(slice));
+  it(
+    `ends ${RUNS} random and mutated programs in an exit or a diagnostic (seed ${SEED})`,
+    () => {
+      for (let i = 0; i < RUNS; i++) {
+        const next = random((Math.imul(SEED32, 1_000_003) + i) >>> 0);
+        const text = next(10) === 0 ? noise(next) : mutate(next);
+        // Small slices pause the steps before the run too; large ones run whole programs.
+        const slice = next(2) === 0 ? 50 : 5000;
+        try {
+          const run = new Run({
+            files: [{ name: 'main.c', text }],
+            limits: { ...LIMITS, steps: 20_000, output: 4096 },
+          });
+          let state = run.advance(1 + next(slice));
+          while (state.state === 'running') {
+            run.takeOutput();
+            state = run.advance(1 + next(slice));
+          }
+          expect(['exit', 'diagnostic']).toContain(state.end.reason);
+        } catch (error) {
+          throw new Error(`run ${i} (seed ${SEED}) threw on:\n${text}\n${String(error)}`, {
+            cause: error,
+          });
         }
-        expect(['exit', 'diagnostic']).toContain(state.end.reason);
-      } catch (error) {
-        throw new Error(`run ${i} (seed ${SEED}) threw on:\n${text}\n${String(error)}`, {
-          cause: error,
-        });
       }
-    }
-  });
+    },
+    TIMEOUT_MS,
+  );
 });

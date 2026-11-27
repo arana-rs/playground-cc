@@ -1,4 +1,5 @@
-# Checks every push and pull request (design/testing.md#ci). Grows with each step of the phase.
+# Every check, on every push and pull request (design/testing.md#ci). The oracle regeneration has
+# its own workflow, oracle.yml, run when the corpus or the compiler image changes.
 name: ci
 
 on:
@@ -8,10 +9,16 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same branch or pull request makes an older run pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # x86-64 Linux, the target the expected results come from (design/language.md#standard-and-target).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -23,9 +30,16 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
+      # Unit, oracle, engine and robustness tests (the robustness test with its fixed seed).
       - run: pnpm test
+      # The robustness test again, with a seed of this run's own, so every run tries new sources;
+      # a failure names the seed that reproduces it.
+      - run: pnpm --filter engine exec vitest run tests/robustness
+        env:
+          ROBUSTNESS_SEED: ${{ github.run_id }}
+          ROBUSTNESS_RUNS: 20000
       # The build runs the dependency license check (design/licensing.md#allowed-licenses); the
-      # end-to-end tests run on it, served by the Compose file's static-web-server.
+      # end-to-end tests run on it, served by the Compose file's static-web-server image.
       - run: pnpm --filter web exec playwright install --with-deps --only-shell chromium
       - run: pnpm --filter web e2e
       - run: python3 design/check_links.py
