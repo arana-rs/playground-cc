@@ -6,7 +6,7 @@ The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, 
 
 ## Desktop
 
-- **Top bar**: the name, the Run button (Stop while a run is active; disabled during a debug session, [worker protocol](worker-protocol.md#rules)), the run status, and one settings menu with the language (`es`, `en`), the theme (system, light, dark), and the Source code and Licenses links ([licensing](licensing.md#notices-and-source-agpl-sections-6-and-13)).
+- **Top bar**: the name, the Run button (during a plain run it keeps its look but does nothing for the first second, so a short run does not flash Stop, then it is Stop until the run ends; disabled during a debug session, [worker protocol](worker-protocol.md#rules)), the run status, and one settings menu with the language (`es`, `en`), the theme (system, light, dark), and the Source code and Licenses links ([licensing](licensing.md#notices-and-source-agpl-sections-6-and-13)).
 - **Run status**: ready (before the first run), running, waiting for input, exited with its status, stopped, or stopped by a diagnostic; during a debug session also paused ([debugger](debugger.md#session)).
 - **Below the bar, side by side**: the editor on the left and the console on the right, with a divider that resizes them by dragging or, focused, with the arrow keys. The editor starts at 60% of the width.
 
@@ -19,7 +19,7 @@ The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, 
 ## Editor
 
 - C highlighting, line numbers, bracket matching and automatic indentation. No autocompletion: learners type their code.
-- **Invisible characters show**: Unicode bidirectional controls (U+202A to U+202E, U+2066 to U+2069), C1 controls (U+0080 to U+009F) and other invisible format characters are drawn as visible marks, so a shared program cannot read differently from what runs.
+- **Invisible characters show**: Unicode bidirectional controls (U+202A to U+202E, U+2066 to U+2069), C1 controls (U+0080 to U+009F), the line and paragraph separators and other invisible format characters are drawn as visible marks, so a shared program cannot read differently from what runs. A mark is the character's code point (`U+202E`), in its own color; a C0 control in the editor shows as in the console.
 - **Read-only during a run**, so every range a run reports (diagnostics, stack frames, leak report) points at the code that ran.
 - Diagnostic markers ([frontend](frontend.md#diagnostics)) are cleared when the code changes or the next run starts.
 
@@ -27,12 +27,13 @@ The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, 
 
 - **Before the first run**: a hint saying how to run (the Run button, Ctrl+Enter).
 - **Cleared** when a run starts.
-- **Output** in a monospace font, wrapping long lines. There is no terminal emulation: `\n` breaks the line and `\t` advances to the next multiple of 8 columns; every other control character shows as its visible symbol (byte `0x00`–`0x1F` as U+2400 plus the byte, `0x7F` as `␡`), so `\r`, `\b` and escape sequences are never hidden effects. Unicode bidirectional controls, C1 controls and other invisible format characters show as visible marks, as in the editor, in the output and in every diagnostic arg or debugger answer, so no text can reorder what is around it.
+- **Output** in a monospace font, wrapping long lines. There is no terminal emulation: `\n` breaks the line and `\t` advances to the next multiple of 8 columns; every other control character shows as its visible symbol (byte `0x00`–`0x1F` as U+2400 plus the byte, `0x7F` as `␡`), in its own color so it never passes for a symbol the program printed, so `\r`, `\b` and escape sequences are never hidden effects. Unicode bidirectional controls, C1 controls and other invisible format characters show as visible marks, as in the editor, in the output and in every diagnostic arg or debugger answer, so no text can reorder what is around it.
+- **No final newline**: when a run ends with output whose last byte is not `\n`, a `↵` mark follows the last character, so `printf("x")` and `printf("x\n")` look different. It is not program text: it has its own color, is never selected or copied, and is announced as "no newline at the end of the output". Empty output gets no mark.
 - **Input echo**: each line the user sends is echoed in the console when it is sent, in a distinct style, as a terminal echoes typed-ahead input.
 - **End of a run**, after the output:
   - exited: a line with the exit status, then the [leak report](memory.md#leak-report) when there are leaks;
   - stopped: a line saying so;
-  - diagnostic: its message, its range when it has one and, during the run, its call stack and from 0.8 (1.0) a "View memory" link ([memory view](memory-view.md#opening-and-closing)).
+  - diagnostic: its message, its range when it has one and, during the run, its call stack, one frame per line (`in main` and its range), and from 0.8 (1.0) a "View memory" link ([memory view](memory-view.md#opening-and-closing)).
 - **Links**: every range in the console (a diagnostic's, each stack frame's, each leaked block's allocation) moves the editor to that place ([errors](errors.md#format)). Until 0.9 (1.0) a range shows as its line and column, without the file name.
 - **Copying**: the output can be selected as text, and a copy button copies exactly what the program wrote, without echo or end lines.
 - **Scrolling** follows new output, unless the user has scrolled up.

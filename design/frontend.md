@@ -9,8 +9,8 @@ The base of the web app: technologies, the single page, diagnostics, preferences
 | Area | Technology | Notes |
 |---|---|---|
 | Base | Vite + React + TypeScript | The `web/` package of the pnpm workspace ([architecture](architecture.md#repository-layout)). The build is static files only: no server-side rendering and no server code |
-| Editor | CodeMirror 6 with `@codemirror/lang-cpp` | Shows diagnostics as lint markers ([diagnostics](#diagnostics)) |
-| UI | Tailwind v4 + shadcn/ui + lucide | shadcn/ui components are copied into the repo; dark and light themes through CSS variables |
+| Editor | CodeMirror 6 with `@codemirror/lang-cpp` | Shows diagnostics as lint markers with `@codemirror/lint` ([diagnostics](#diagnostics)) |
+| UI | Tailwind v4 + shadcn/ui + lucide | shadcn/ui components are copied into the repo; dark and light themes through CSS variables, with the Tokyo Night palettes (Night for dark, Day for light) for the page, the editor's highlighting and the console. Light colors that fall below a 4.5:1 contrast for text are darkened |
 | i18n | Paraglide JS (`es`, `en`) | Typed message functions, one per diagnostic code |
 | State | React state | No state library until shared UI state outgrows React state |
 | C engine | `engine/` package in a Web Worker | [architecture](architecture.md#components) |
@@ -54,7 +54,7 @@ The base of the web app: technologies, the single page, diagnostics, preferences
 
 | Keys | Action |
 |---|---|
-| Ctrl+Enter (⌘+Enter on macOS) | Run, or Stop while a run is active (the Run button is the Stop button, [worker protocol](worker-protocol.md#rules)). Works anywhere on the page while Run or Stop is enabled (not during a debug session or with the memory view open), and replaces CodeMirror's own binding for those keys |
+| Ctrl+Enter (⌘+Enter on macOS) | Run, or Stop once the Run button has turned into Stop ([worker protocol](worker-protocol.md#rules)). Works anywhere on the page while Run or Stop is enabled (not during the first second of a plain run, a debug session, or with the memory view open), and replaces CodeMirror's own binding for those keys |
 | Ctrl+C, in the input field during a debug session | Pause the running program, as in gdb ([debugger](debugger.md#session)). Only with no text selected; with a selection it copies |
 | Ctrl+D, in the input field | End of input, the same as the console's button ([libc](libc.md#input)). Ctrl on macOS too, as in a terminal; it always prevents the browser's default (bookmarking, or deleting forward on macOS) |
 

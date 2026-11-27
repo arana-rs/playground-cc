@@ -5,30 +5,13 @@ import { StrictMode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/App';
 import { HELLO_WORLD } from '../src/hello';
-import type { RunCallbacks } from '../src/runner';
-import type { RunControl } from '../src/useRun';
-
-/** A Runner stand-in: the test plays the Worker's part through the callbacks it keeps. */
-class FakeRunner implements RunControl {
-  readonly runs: { files: { name: string; text: string }[]; callbacks: RunCallbacks }[] = [];
-  stops = 0;
-
-  run(files: { name: string; text: string }[], callbacks: RunCallbacks): void {
-    this.runs.push({ files, callbacks });
-  }
-
-  stop(): void {
-    this.stops++;
-  }
-
-  get last(): RunCallbacks {
-    return this.runs.at(-1)?.callbacks as RunCallbacks;
-  }
-}
+import { STOP_DELAY_MS } from '../src/useRun';
+import { FakeRunner } from './fake-runner';
 
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 
 describe('App', () => {
@@ -58,10 +41,12 @@ describe('App', () => {
   });
 
   it('turns Run into Stop during a run, and clears the console on the next run', () => {
+    vi.useFakeTimers();
     const runner = new FakeRunner();
     render(<App runner={runner} />);
     fireEvent.click(screen.getByRole('button', { name: 'Run' }));
     act(() => runner.last.output('loop'));
+    act(() => vi.advanceTimersByTime(STOP_DELAY_MS));
     fireEvent.click(screen.getByRole('button', { name: 'Stop' }));
     expect(runner.stops).toBe(1);
     act(() => runner.last.ended({ reason: 'stopped' }));
@@ -75,6 +60,57 @@ describe('App', () => {
       }),
     );
     expect(screen.getByRole('status').textContent).toBe('Stopped by an error');
+  });
+
+  it('keeps Run, doing nothing, for the first second of a run, then turns it into Stop', () => {
+    vi.useFakeTimers();
+    const runner = new FakeRunner();
+    render(<App runner={runner} />);
+    const button = screen.getByRole('button', { name: 'Run' });
+    button.focus();
+    fireEvent.click(button);
+    act(() => vi.advanceTimersByTime(STOP_DELAY_MS - 1));
+    expect(screen.getByRole('button', { name: 'Run' }).getAttribute('aria-disabled')).toBe('true');
+    fireEvent.click(button);
+    expect(runner.runs).toHaveLength(1);
+    expect(runner.stops).toBe(0);
+    act(() => vi.advanceTimersByTime(1));
+    // The same element, so a keyboard user keeps the focus on it.
+    expect(screen.getByRole('button', { name: 'Stop' })).toBe(button);
+    expect(document.activeElement).toBe(button);
+    expect(button.hasAttribute('aria-disabled')).toBe(false);
+    fireEvent.click(button);
+    expect(runner.stops).toBe(1);
+  });
+
+  it('never shows Stop for a short run, nor early for the next one', () => {
+    vi.useFakeTimers();
+    const runner = new FakeRunner();
+    render(<App runner={runner} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Run' }));
+    act(() => vi.advanceTimersByTime(STOP_DELAY_MS / 2));
+    act(() => runner.last.ended({ reason: 'exit', status: 0 }));
+    expect(screen.getByRole('button', { name: 'Run' }).hasAttribute('aria-disabled')).toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: 'Run' }));
+    // The first run's delay would have ended here.
+    act(() => vi.advanceTimersByTime(STOP_DELAY_MS / 2));
+    expect(screen.queryByRole('button', { name: 'Stop' })).toBeNull();
+    act(() => vi.advanceTimersByTime(STOP_DELAY_MS / 2));
+    expect(screen.getByRole('button', { name: 'Stop' })).toBeDefined();
+    act(() => runner.last.ended({ reason: 'stopped' }));
+    act(() => vi.advanceTimersByTime(STOP_DELAY_MS));
+    expect(screen.getByRole('button', { name: 'Run' })).toBeDefined();
+  });
+
+  it('drops the pending Stop delay when it unmounts', () => {
+    vi.useFakeTimers();
+    const { unmount } = render(<App runner={new FakeRunner()} />);
+    // The editor keeps timers of its own.
+    const before = vi.getTimerCount();
+    fireEvent.click(screen.getByRole('button', { name: 'Run' }));
+    expect(vi.getTimerCount()).toBe(before + 1);
+    unmount();
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it('runs the code as edited', () => {

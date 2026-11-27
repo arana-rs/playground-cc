@@ -3,52 +3,79 @@
 /* Dark mode follows the `dark` class on the root, set from the system's theme (main.tsx). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* The shadcn/ui theme (neutral), plus the editor's syntax colors, for light and dark. */
+/*
+ * The shadcn/ui theme variables with the Tokyo Night palettes: Day for light, Night for dark
+ * (colors from folke/tokyonight.nvim, Apache-2.0; in light, a few darkened for contrast), plus the editor's and the console's own.
+ */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --syntax-keyword: oklch(0.45 0.2 300);
-  --syntax-type: oklch(0.5 0.15 250);
-  --syntax-string: oklch(0.5 0.13 145);
-  --syntax-number: oklch(0.55 0.15 50);
-  --syntax-comment: oklch(0.55 0 0);
-  --syntax-preprocessor: oklch(0.5 0.15 20);
+  --background: #e1e2e7;
+  --foreground: #3760bf;
+  --muted: #d0d5e3;
+  --muted-foreground: #4f5e9e;
+  --primary: #2e6fd9;
+  --primary-foreground: #ffffff;
+  --secondary: #c4c8da;
+  --secondary-foreground: #3760bf;
+  --accent: #c4c8da;
+  --accent-foreground: #3760bf;
+  --destructive: #b33a3a;
+  --destructive-foreground: #ffffff;
+  --border: #c4c8da;
+  --input: #c4c8da;
+  --ring: #2e7de9;
+  --popover: #d0d5e3;
+  --popover-foreground: #3760bf;
+  --console: #ebecf0;
+  --line-number: #8990b3;
+  --line-number-active: #3760bf;
+  --active-line: #d5d8e5;
+  --selection: #b7c1e3;
+  --code-cursor: #3760bf;
+  --special: #b80d42;
+  --syntax-keyword: #9854f1;
+  --syntax-type: #188092;
+  --syntax-function: #2e7de9;
+  --syntax-string: #587539;
+  --syntax-number: #b15c00;
+  --syntax-comment: #848cb5;
+  --syntax-preprocessor: #007197;
+  --syntax-operator: #006a83;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --syntax-keyword: oklch(0.75 0.15 300);
-  --syntax-type: oklch(0.75 0.12 230);
-  --syntax-string: oklch(0.78 0.13 145);
-  --syntax-number: oklch(0.8 0.13 60);
-  --syntax-comment: oklch(0.6 0 0);
-  --syntax-preprocessor: oklch(0.75 0.13 20);
+  --background: #1a1b26;
+  --foreground: #c0caf5;
+  --muted: #16161e;
+  --muted-foreground: #a9b1d6;
+  --primary: #7aa2f7;
+  --primary-foreground: #1a1b26;
+  --secondary: #292e42;
+  --secondary-foreground: #c0caf5;
+  --accent: #292e42;
+  --accent-foreground: #c0caf5;
+  --destructive: #f7768e;
+  --destructive-foreground: #1a1b26;
+  --border: #292e42;
+  --input: #292e42;
+  --ring: #7aa2f7;
+  --popover: #16161e;
+  --popover-foreground: #c0caf5;
+  --console: #16161e;
+  --line-number: #3b4261;
+  --line-number-active: #737aa2;
+  --active-line: #292e42;
+  --selection: #283457;
+  --code-cursor: #c0caf5;
+  --special: #f7768e;
+  --syntax-keyword: #bb9af7;
+  --syntax-type: #2ac3de;
+  --syntax-function: #7aa2f7;
+  --syntax-string: #9ece6a;
+  --syntax-number: #ff9e64;
+  --syntax-comment: #565f89;
+  --syntax-preprocessor: #7dcfff;
+  --syntax-operator: #89ddff;
 }
 
 @theme inline {
@@ -64,9 +91,11 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-console: var(--console);
 }
 
 @layer base {
@@ -76,4 +105,19 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* A control or invisible character's mark in the console, styled apart from program text. */
+.special-char {
+  color: var(--special);
+}
+
+/* The mark after output that does not end in a newline: not program text, never copied. */
+.eol-mark {
+  color: var(--muted-foreground);
+}
+
+/* The line that says how the run ended, set apart from the output above it. */
+.end-line {
+  margin-top: 0.5rem;
 }

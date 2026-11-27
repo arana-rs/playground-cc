@@ -9,7 +9,7 @@ The messages between the UI on the main thread and the Worker loop ([architectur
 - **Plain objects** sent with `postMessage`, each with a `type` field. The message types live in `web/`, next to the Worker entry; diagnostics and the leak report are the engine's own types ([errors](errors.md#format), [memory](memory.md#leak-report)).
 - **No version**: the UI and the Worker always come from the same build.
 - **No handshake**: the UI posts `run` as soon as it has a Worker; `postMessage` queues it until the Worker has loaded.
-- **One run at a time**: the UI never starts a run or a session before the previous one's `ended`: the Run button is the Stop button during a plain run, and unavailable during a debug or memory view session.
+- **One run at a time**: the UI never starts a run or a session before the previous one's `ended`: the Run button does nothing for the first second of a plain run and is then the Stop button ([frontend screens](frontend-screens.md#desktop)), and is unavailable during a debug or memory view session.
 - **Run ids**: the UI numbers each run, and every message about a run carries its `runId`. Both sides ignore messages whose `runId` is not the active run's: the UI drops late output from a stopped run, and the Worker drops an `input`, `end_input` or `stop` that crossed the `ended` of its run. `run` starts with an empty input queue and no end of input.
 
 ## UI to Worker

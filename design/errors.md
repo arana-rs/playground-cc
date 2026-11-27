@@ -14,7 +14,7 @@ Every diagnostic, with its code. The engine produces them all, except `engine.in
 - **Every diagnostic is an error**: there are no warnings.
 - **Before the run** (preprocessing, parsing, checking): only the first diagnostic found is reported, and the program does not start.
 - **During the run**: the diagnostic stops the program between two steps ([engine](engine.md#execution-model)). The output written before it stays in the console, even where a native program would have lost its buffered output.
-- **Translation**: each code has one message in each catalog (`es`, `en`), with placeholders named after its args. A code without a message shows a generic message with the code.
+- **Translation**: each code has one message in each catalog (`es`, `en`), with placeholders named after its args. A code without a message shows a generic message with the code. C text in a message (an identifier, a type, a conversion, a `construct` key that is a keyword) is quoted as each language quotes code, `‘count’` in `en` and `«count»` in `es`; a `construct` key that is not a keyword shows as its translated name. Counts and sizes (`limit`, `position`) are formatted with the locale; a value of the program (`value`) shows as C writes it.
 - Codes for syntax, name and type errors are added as each check is built ([language](language.md#checks)).
 
 ## Codes
