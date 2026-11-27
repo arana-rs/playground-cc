@@ -1,7 +1,8 @@
-// The settings menu: the language and the theme (design/frontend-screens.md#desktop). A native
+// The settings menu: the language, the theme, and the Source code and Licenses links
+// (design/frontend-screens.md#desktop, design/licensing.md). A native
 // popover, so Escape, clicking outside and the focus return work as the browser does them.
-import { Settings as SettingsIcon } from 'lucide-react';
-import { useId } from 'react';
+import { ExternalLink as ExternalIcon, Settings as SettingsIcon } from 'lucide-react';
+import { type ReactNode, useId } from 'react';
 import { m } from '../paraglide/messages';
 import { type Locale, locales } from '../paraglide/runtime';
 import { THEMES, type Theme } from '../preferences';
@@ -57,6 +58,22 @@ function Choices<T extends string>({
   );
 }
 
+/** A link that opens in a new tab, and says so (design/licensing.md#notices-and-source-agpl-sections-6-and-13). */
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-1.5 rounded-sm py-0.5 underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      {children}
+      <ExternalIcon aria-hidden="true" className="size-3.5" />
+      <span className="sr-only">{m.opens_new_tab()}</span>
+    </a>
+  );
+}
+
 export function Settings({
   locale,
   theme,
@@ -106,6 +123,14 @@ export function Settings({
             value={theme}
             onChange={onTheme}
           />
+          <div className="flex flex-col gap-1 border-t pt-3">
+            <ExternalLink href={import.meta.env.VITE_SOURCE_URL}>
+              {m.settings_source()}
+            </ExternalLink>
+            <ExternalLink href={`${import.meta.env.BASE_URL}THIRD-PARTY-LICENSES.txt`}>
+              {m.settings_licenses()}
+            </ExternalLink>
+          </div>
         </div>
       </div>
     </>

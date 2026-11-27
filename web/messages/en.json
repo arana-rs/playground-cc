@@ -139,5 +139,8 @@
   "divider_label": "Resize the editor and the console",
   "tabs_label": "Code and console",
   "keys_run": "Ctrl+Enter",
-  "keys_run_mac": "⌘+Enter"
+  "keys_run_mac": "⌘+Enter",
+  "settings_source": "Source code",
+  "settings_licenses": "Licenses",
+  "opens_new_tab": "(opens in a new tab)"
 }

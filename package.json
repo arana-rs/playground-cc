@@ -7,7 +7,7 @@
     "format": "biome check --write",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && python3 design/check_links.py"
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm --filter web build && python3 design/check_links.py"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.9"

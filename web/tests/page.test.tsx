@@ -112,6 +112,24 @@ describe('settings', () => {
   });
 });
 
+describe('source and licenses', () => {
+  it('link to the source of this build and to the third-party licenses, in a new tab', () => {
+    page();
+    const source = screen.getByRole('link', { hidden: true, name: /^Source code/ });
+    const licenses = screen.getByRole('link', { hidden: true, name: /^Licenses/ });
+    expect(source.getAttribute('href')).toBe(import.meta.env.VITE_SOURCE_URL);
+    expect(source.getAttribute('href')).toMatch(
+      /^https:\/\/github\.com\/arana-rs\/playground-cc\/tree\/v\d/,
+    );
+    expect(licenses.getAttribute('href')).toBe('/THIRD-PARTY-LICENSES.txt');
+    for (const link of [source, licenses]) {
+      expect(link.getAttribute('target')).toBe('_blank');
+      expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+      expect(link.textContent).toContain('(opens in a new tab)');
+    }
+  });
+});
+
 describe('divider', () => {
   /** The editor's panel: the first in the page's main area. */
   const editorWidth = () => {

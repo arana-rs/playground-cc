@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    // The build's own files: they run in Node, never in the page.
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "allowImportingTsExtensions": true
+  },
+  "include": ["vite.config.ts", "licenses.ts", "project.inlang/paraglide.config.ts"]
+}

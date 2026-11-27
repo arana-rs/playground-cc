@@ -5,7 +5,8 @@
     "jsx": "react-jsx",
     "types": ["vite/client"]
   },
-  "include": ["src", "vite.config.ts", "project.inlang/paraglide.config.ts"],
-  // The Worker entry runs in a Worker: tsconfig.worker.json checks it with the Worker's types.
+  "include": ["src"],
+  // The Worker entry runs in a Worker: tsconfig.worker.json checks it with the Worker's types;
+  // the build's own files run in Node: tsconfig.node.json checks them.
   "exclude": ["src/worker/entry.ts"]
 }

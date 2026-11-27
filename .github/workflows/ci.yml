@@ -24,4 +24,6 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      # The build runs the dependency license check (design/licensing.md#allowed-licenses).
+      - run: pnpm --filter web build
       - run: python3 design/check_links.py

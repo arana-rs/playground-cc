@@ -1,0 +1,39 @@
+/*
+ * The Tokyo Night palettes, Day and Night, as tokyonight.nvim names its colors: copied from
+ * https://github.com/folke/tokyonight.nvim (Apache-2.0, LICENSE beside this file). Only the colors
+ * the page uses; index.css maps them to its theme variables.
+ */
+:root {
+  --tn-day-bg: #e1e2e7;
+  --tn-day-bg-dark: #d0d5e3;
+  --tn-day-bg-highlight: #c4c8da;
+  --tn-day-bg-visual: #b7c1e3;
+  --tn-day-fg: #3760bf;
+  --tn-day-dark5: #8990b3;
+  --tn-day-comment: #848cb5;
+  --tn-day-blue: #2e7de9;
+  --tn-day-blue1: #188092;
+  --tn-day-blue5: #006a83;
+  --tn-day-cyan: #007197;
+  --tn-day-magenta: #9854f1;
+  --tn-day-green: #587539;
+  --tn-day-orange: #b15c00;
+
+  --tn-night-bg: #1a1b26;
+  --tn-night-bg-dark: #16161e;
+  --tn-night-bg-highlight: #292e42;
+  --tn-night-bg-visual: #283457;
+  --tn-night-fg: #c0caf5;
+  --tn-night-fg-dark: #a9b1d6;
+  --tn-night-fg-gutter: #3b4261;
+  --tn-night-dark5: #737aa2;
+  --tn-night-comment: #565f89;
+  --tn-night-blue: #7aa2f7;
+  --tn-night-blue1: #2ac3de;
+  --tn-night-blue5: #89ddff;
+  --tn-night-cyan: #7dcfff;
+  --tn-night-magenta: #bb9af7;
+  --tn-night-green: #9ece6a;
+  --tn-night-orange: #ff9e64;
+  --tn-night-red: #f7768e;
+}

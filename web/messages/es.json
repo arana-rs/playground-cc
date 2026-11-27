@@ -139,5 +139,8 @@
   "divider_label": "Redimensionar el editor y la consola",
   "tabs_label": "Código y consola",
   "keys_run": "Ctrl+Enter",
-  "keys_run_mac": "⌘+Enter"
+  "keys_run_mac": "⌘+Enter",
+  "settings_source": "Código fuente",
+  "settings_licenses": "Licencias",
+  "opens_new_tab": "(se abre en una pestaña nueva)"
 }
