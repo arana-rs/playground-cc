@@ -114,7 +114,16 @@
 
 /* The mark after output that does not end in a newline: not program text, never copied. */
 .eol-mark {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: -0.2em;
+  height: 1.2em;
+  margin-left: 0.25em;
+  padding: 0 0.2em;
+  border: 1px solid var(--muted-foreground);
+  border-radius: 0.25em;
   color: var(--muted-foreground);
+  user-select: none;
 }
 
 /* The line that says how the run ended, set apart from the output above it. */

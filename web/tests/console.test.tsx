@@ -47,7 +47,9 @@ describe('console output', () => {
     act(() => runner.last.ended({ reason: 'exit', status: 0 }));
     const mark = output().querySelector('.eol-mark');
     expect(mark?.getAttribute('aria-label')).toBe('No newline at the end of the output');
-    expect(output().textContent).toBe(`no newline${ch(0x21b5)}`);
+    expect(mark?.querySelector('svg')).not.toBeNull();
+    // An icon, not text: the output reads, and copies, as the program wrote it.
+    expect(output().textContent).toBe('no newline');
   });
 
   it('does not mark output that ends in a newline, nor empty output', () => {

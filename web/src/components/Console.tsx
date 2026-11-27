@@ -1,7 +1,7 @@
 // The console: the program's output as it wrote it, with control and invisible characters as marks,
 // then the line that says how the run ended (design/frontend-screens.md#console).
 import type { Range } from 'engine';
-import { Check, Copy } from 'lucide-react';
+import { Check, Copy, CornerDownLeft } from 'lucide-react';
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { formatNumber, messageOf, rangeText } from '../diagnostics';
 import { m } from '../paraglide/messages';
@@ -175,13 +175,14 @@ export function Console({
                 <Visible key={i} text={chunk} />
               ))}
               {noNewline && (
+                // An icon, not a character: it shows the same in every font, and is never copied.
                 <span
-                  className="eol-mark select-none"
+                  className="eol-mark"
                   role="img"
                   aria-label={m.console_no_newline()}
                   title={m.console_no_newline()}
                 >
-                  {'\u21b5'}
+                  <CornerDownLeft aria-hidden="true" className="size-[0.95em]" strokeWidth={2.5} />
                 </span>
               )}
             </pre>
