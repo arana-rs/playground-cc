@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Dark mode follows the `dark` class on the root, set from the system's theme (main.tsx). */
+/* Dark mode follows the `dark` class on the root, which preferences.ts sets from the theme. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
@@ -96,6 +96,8 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-console: var(--console);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 }
 
 @layer base {
@@ -129,4 +131,18 @@
 /* The line that says how the run ended, set apart from the output above it. */
 .end-line {
   margin-top: 0.5rem;
+}
+
+/* No transitions or animations for those who ask for less motion (design/frontend.md#accessibility). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    /* biome-ignore lint/complexity/noImportantStyles: it must win over every animation, CodeMirror's injected cursor blink included. */
+    animation: none !important;
+    /* biome-ignore lint/complexity/noImportantStyles: it must win over every animation, CodeMirror's injected cursor blink included. */
+    transition: none !important;
+    /* biome-ignore lint/complexity/noImportantStyles: it must win over every animation, CodeMirror's injected cursor blink included. */
+    scroll-behavior: auto !important;
+  }
 }

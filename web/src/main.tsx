@@ -1,19 +1,10 @@
 import './index.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+// The language and theme preferences come first: Paraglide asks them for the language.
+import './preferences';
 import { App } from './App';
-import { m } from './paraglide/messages';
-import { getLocale } from './paraglide/runtime';
 import { Runner } from './runner';
-
-document.documentElement.lang = getLocale();
-document.title = m.app_name();
-
-// The theme follows the system's (design/frontend.md#preferences).
-const dark = window.matchMedia('(prefers-color-scheme: dark)');
-const applyTheme = () => document.documentElement.classList.toggle('dark', dark.matches);
-applyTheme();
-dark.addEventListener('change', applyTheme);
 
 // One Worker per tab, created as the page loads (design/architecture.md#components).
 const runner = new Runner(

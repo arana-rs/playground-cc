@@ -14,4 +14,5 @@ export default defineConfig({
   // React and CodeMirror make the page's chunk about 700 kB (220 kB compressed): one chunk, on
   // purpose, since the page needs all of it at once.
   build: { target: 'es2022', chunkSizeWarningLimit: 1024 },
+  test: { setupFiles: ['./tests/setup.ts'] },
 });

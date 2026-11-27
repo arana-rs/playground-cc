@@ -5,6 +5,7 @@ import { Check, Copy, CornerDownLeft } from 'lucide-react';
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { formatNumber, messageOf, rangeText } from '../diagnostics';
 import { m } from '../paraglide/messages';
+import { runKeysText } from '../shortcut';
 import type { RunStatus } from '../useRun';
 import { codePoint, markOf, pieces } from '../visible';
 import { Button } from './ui/button';
@@ -34,7 +35,7 @@ function RangeLink({ range, onReveal }: { range: Range; onReveal: (range: Range)
   return (
     <button
       type="button"
-      className="cursor-pointer underline underline-offset-2 hover:text-foreground"
+      className="cursor-pointer rounded-sm underline underline-offset-2 outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
       onClick={() => onReveal(range)}
     >
       {rangeText(range)}
@@ -189,7 +190,7 @@ export function Console({
             {ended && <End status={status} onReveal={onReveal} />}
           </>
         ) : (
-          <p className="text-muted-foreground">{m.console_hint()}</p>
+          <p className="text-muted-foreground">{m.console_hint({ keys: runKeysText() })}</p>
         )}
       </div>
     </section>

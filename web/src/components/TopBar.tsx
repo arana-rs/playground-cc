@@ -1,17 +1,19 @@
 import { Play, Square } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { formatNumber } from '../diagnostics';
 import { m } from '../paraglide/messages';
-import { getLocale } from '../paraglide/runtime';
+import { runKeys, runKeysText } from '../shortcut';
 import type { RunStatus } from '../useRun';
 import { Button } from './ui/button';
 
-function statusText(status: RunStatus): string {
+export function statusText(status: RunStatus): string {
   switch (status.kind) {
     case 'ready':
       return m.status_ready();
     case 'running':
       return m.status_running();
     case 'exited':
-      return m.status_exited({ status: new Intl.NumberFormat(getLocale()).format(status.status) });
+      return m.status_exited({ status: formatNumber(status.status) });
     case 'stopped':
       return m.status_stopped();
     case 'diagnostic':
@@ -20,17 +22,22 @@ function statusText(status: RunStatus): string {
 }
 
 /**
- * The name, the Run button and the run status. During a run the button keeps the look of Run but
- * does nothing until the run is stoppable, then it is Stop; it stays one element, so it keeps focus.
+ * The name, the Run button, the run status (unless the page shows it elsewhere) and the settings.
+ * During a run the button keeps the look of Run but does nothing until the run is stoppable, then
+ * it is Stop; it stays one element, so it keeps focus.
  */
 export function TopBar({
   status,
+  showStatus,
   onRun,
   onStop,
+  settings,
 }: {
   status: RunStatus;
+  showStatus: boolean;
   onRun: () => void;
   onStop: () => void;
+  settings: ReactNode;
 }) {
   const running = status.kind === 'running';
   const stoppable = running && status.stoppable;
@@ -41,13 +48,19 @@ export function TopBar({
         variant={stoppable ? 'destructive' : 'default'}
         size="sm"
         aria-disabled={running && !stoppable ? true : undefined}
+        aria-keyshortcuts={runKeys()}
+        title={runKeysText()}
         className="aria-disabled:cursor-progress"
         onClick={stoppable ? onStop : running ? undefined : onRun}
       >
         {stoppable ? <Square aria-hidden="true" /> : <Play aria-hidden="true" />}
         {stoppable ? m.stop() : m.run()}
       </Button>
-      <output className="text-sm text-muted-foreground">{statusText(status)}</output>
+      {/* Not live: the page's live region announces the run (design/frontend.md#accessibility). */}
+      <output aria-live="off" className="text-muted-foreground text-sm" hidden={!showStatus}>
+        {statusText(status)}
+      </output>
+      <div className="ml-auto">{settings}</div>
     </header>
   );
 }

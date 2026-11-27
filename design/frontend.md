@@ -54,14 +54,14 @@ The base of the web app: technologies, the single page, diagnostics, preferences
 
 | Keys | Action |
 |---|---|
-| Ctrl+Enter (⌘+Enter on macOS) | Run, or Stop once the Run button has turned into Stop ([worker protocol](worker-protocol.md#rules)). Works anywhere on the page while Run or Stop is enabled (not during the first second of a plain run, a debug session, or with the memory view open), and replaces CodeMirror's own binding for those keys |
+| Ctrl+Enter (⌘+Enter on macOS) | Run, or Stop once the Run button has turned into Stop ([worker protocol](worker-protocol.md#rules)). Works anywhere on the page while Run or Stop is enabled (not during the first second of a plain run, a debug session, or with the memory view open), and replaces CodeMirror's own binding for those keys. A held key's repeats are ignored, so holding it never turns a Run into a Stop. The Run button names the shortcut in `aria-keyshortcuts` and its tooltip |
 | Ctrl+C, in the input field during a debug session | Pause the running program, as in gdb ([debugger](debugger.md#session)). Only with no text selected; with a selection it copies |
 | Ctrl+D, in the input field | End of input, the same as the console's button ([libc](libc.md#input)). Ctrl on macOS too, as in a terminal; it always prevents the browser's default (bookmarking, or deleting forward on macOS) |
 
 ## Accessibility
 
 - Every action is reachable from the keyboard. In the editor, Tab indents; Escape and then Tab moves the focus out, as CodeMirror does.
-- A polite live region announces when a run starts, waits for input and ends, and each diagnostic's message, so a screen reader hears what the console shows.
+- A polite live region announces when a run starts, waits for input and ends (with the console's end line), and each diagnostic's message, so a screen reader hears what the console shows. It is the page's only announcement of a run: the run status in the bar is not a live region, so nothing is heard twice.
 - With `prefers-reduced-motion`, there are no transitions or animations.
 
 ## Browser support

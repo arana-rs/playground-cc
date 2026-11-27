@@ -8,11 +8,12 @@ The layout of the one page ([frontend](frontend.md#one-page)): top bar, editor, 
 
 - **Top bar**: the name, the Run button (during a plain run it keeps its look but does nothing for the first second, so a short run does not flash Stop, then it is Stop until the run ends; disabled during a debug session, [worker protocol](worker-protocol.md#rules)), the run status, and one settings menu with the language (`es`, `en`), the theme (system, light, dark), and the Source code and Licenses links ([licensing](licensing.md#notices-and-source-agpl-sections-6-and-13)).
 - **Run status**: ready (before the first run), running, waiting for input, exited with its status, stopped, or stopped by a diagnostic; during a debug session also paused ([debugger](debugger.md#session)).
-- **Below the bar, side by side**: the editor on the left and the console on the right, with a divider that resizes them by dragging or, focused, with the arrow keys. The editor starts at 60% of the width.
+- **Settings menu**: a button at the right end of the bar opens it over the page; each setting is a group of radio buttons, and a choice applies at once, the language included, without reloading the page. Escape or a click outside closes it.
+- **Below the bar, side by side**: the editor on the left and the console on the right, with a divider that resizes them by dragging or, focused, with the arrow keys (5% per press; Home and End go to the ends). The editor starts at 60% of the width on every load and takes from 20% to 80% of it.
 
 ## Phones
 
-- Below 768 px wide, the editor and the console become two tabs, **Code** and **Console**, under the top bar, and the run status shows on the Console tab instead of the bar.
+- Below 768 px wide, the editor and the console become two tabs, **Code** and **Console**, under the top bar, and the run status shows on the Console tab instead of the bar, after its name (`Console · Running`). The left and right arrow keys move between the tabs. The editor keeps its code and history when the width crosses 768 px.
 - Run switches to the Console tab. Choosing a diagnostic's range switches to the Code tab at that range.
 - When the program waits for input while the Code tab is shown, the Console tab gets a mark; the input field is focused only once the console is visible.
 

@@ -151,6 +151,7 @@ export function Editor({
   const parent = useRef<HTMLDivElement>(null);
   const view = useRef<EditorView>(undefined);
   const readOnlySetting = useRef(new Compartment());
+  const labelSetting = useRef(new Compartment());
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
 
@@ -174,7 +175,7 @@ export function Editor({
           cpp(),
           theme,
           readOnlySetting.current.of(EditorState.readOnly.of(false)),
-          EditorView.contentAttributes.of({ 'aria-label': label }),
+          labelSetting.current.of(EditorView.contentAttributes.of({ 'aria-label': label })),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) onChangeRef.current(update.state.doc.toString());
           }),
@@ -193,6 +194,14 @@ export function Editor({
       effects: readOnlySetting.current.reconfigure(EditorState.readOnly.of(readOnly)),
     });
   }, [readOnly]);
+
+  useEffect(() => {
+    view.current?.dispatch({
+      effects: labelSetting.current.reconfigure(
+        EditorView.contentAttributes.of({ 'aria-label': label }),
+      ),
+    });
+  }, [label]);
 
   useEffect(() => {
     const current = view.current;

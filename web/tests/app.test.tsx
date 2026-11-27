@@ -20,7 +20,7 @@ describe('App', () => {
     expect(screen.getByRole('heading').textContent).toBe('playground-cc');
     expect(screen.getByRole('status').textContent).toBe('Ready');
     expect(screen.getByRole('region', { name: 'Console' }).textContent).toBe(
-      'Press Run to run your program.',
+      'Press Run or Ctrl+Enter to run your program.',
     );
     expect(screen.getByRole('textbox', { name: 'Code' }).textContent).toContain('Hello, world!');
   });

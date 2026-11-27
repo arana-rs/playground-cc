@@ -10,7 +10,7 @@
   "status_diagnostic": "Detenido por un error",
   "editor_label": "Código",
   "console_label": "Consola",
-  "console_hint": "Pulsa Ejecutar para ejecutar tu programa.",
+  "console_hint": "Pulsa Ejecutar o {keys} para ejecutar tu programa.",
   "console_exited": "El programa terminó con estado {status}.",
   "console_stopped": "Programa detenido.",
   "console_copy": "Copiar salida",
@@ -127,5 +127,17 @@
         "countPlural=*": "{count: number} marcos más"
       }
     }
-  ]
+  ],
+  "settings": "Ajustes",
+  "settings_language": "Idioma",
+  "settings_theme": "Tema",
+  "language_en": "English",
+  "language_es": "Español",
+  "theme_system": "Sistema",
+  "theme_light": "Claro",
+  "theme_dark": "Oscuro",
+  "divider_label": "Redimensionar el editor y la consola",
+  "tabs_label": "Código y consola",
+  "keys_run": "Ctrl+Enter",
+  "keys_run_mac": "⌘+Enter"
 }
