@@ -2,7 +2,7 @@
 
 > Part of the [playground-cc spec](README.md). Related: [libc](libc.md), [frontend](frontend.md), [frontend screens](frontend-screens.md), [offline](offline.md), [testing](testing.md#ci), [deployment](deployment.md), [docs site](docs-site.md).
 
-playground-cc is **AGPL-3.0** ([LICENSE](../LICENSE)). Everything the site ships must be compatible with it, the site carries every notice its parts require, and every visitor can get its source.
+playground-cc is **AGPL-3.0-or-later** ([LICENSE](../LICENSE)): the GNU Affero General Public License, version 3 or, at the user's option, any later version. Everything the site ships must be compatible with it, the site carries every notice its parts require, and every visitor can get its source.
 
 ## What the license covers
 

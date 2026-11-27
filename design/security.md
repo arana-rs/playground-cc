@@ -18,7 +18,7 @@ There is no server code, no account and no stored data outside the user's browse
 
 ## Headers
 
-static-web-server sends these on every response ([deployment](deployment.md)):
+static-web-server sends these on every response, except its fixed `405` page for methods other than `GET`, `HEAD` and `OPTIONS` ([deployment](deployment.md#what-the-repository-ships)):
 
 | Header | Value |
 |---|---|

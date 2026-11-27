@@ -8,3 +8,5 @@ dist/
 .astro/
 web/src/paraglide/
 web/project.inlang/cache/
+web/test-results/
+web/playwright-report/

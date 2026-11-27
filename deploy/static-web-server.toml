@@ -1,0 +1,30 @@
+# static-web-server's configuration for the site (design/deployment.md), used by compose.yaml and
+# by the end-to-end tests.
+
+[general]
+host = "::"
+port = 8080
+root = "/public"
+log-level = "warn"
+compression = true
+directory-listing = false
+ignore-hidden-files = true
+disable-symlinks = true
+health = false
+# The headers below replace static-web-server's own.
+security-headers = false
+cache-control-headers = false
+
+[advanced]
+
+# The security headers, on every response, 404s included (design/security.md#headers).
+[[advanced.headers]]
+source = "**"
+[advanced.headers.headers]
+Content-Security-Policy = "default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "no-referrer"
+Cross-Origin-Opener-Policy = "same-origin"
+# Revalidated on every load, so a new release shows at once; until the service worker's caching
+# (1.0), nothing is cached for longer, 404s and files a deploy is replacing included.
+Cache-Control = "no-cache"

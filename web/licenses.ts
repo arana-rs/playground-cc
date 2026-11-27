@@ -177,8 +177,9 @@ const RULE = '='.repeat(80);
 /** THIRD-PARTY-LICENSES.txt: a pointer to LICENSE.txt, then every notice in full. */
 export function thirdPartyText(notices: readonly Notice[], sourceUrl: string): string {
   const head = [
-    'playground-cc is licensed under the GNU Affero General Public License, version 3: see',
-    'LICENSE.txt, next to this file. Its source code is at',
+    'playground-cc is licensed under the GNU Affero General Public License, version 3 or (at',
+    'your option) any later version (AGPL-3.0-or-later): see LICENSE.txt, next to this file. Its',
+    'source code is at',
     sourceUrl,
     '',
     'It ships the third-party code below: packages in its bundle, code copied into it, and code',

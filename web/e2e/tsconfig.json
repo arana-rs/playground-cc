@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // The tests run in Node and drive the page through Playwright; code passed to the page needs
+    // its types too.
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"]
+  },
+  "include": [".", "../playwright.config.ts"]
+}

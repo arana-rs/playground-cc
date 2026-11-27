@@ -20,12 +20,17 @@ Two kinds of documentation, never mixed:
 Run from the repository root.
 - `pnpm install --frozen-lockfile`: install the workspace.
 - `pnpm check`: everything CI runs (lint, typecheck, tests, the build with its
-  license check, spec links). Must pass before a step is done.
+  license check, the end-to-end tests, spec links). Must pass before a step is
+  done; the end-to-end tests need Docker.
 - `pnpm lint` (Biome; `pnpm format` fixes what it can), `pnpm typecheck`,
   `pnpm test`; one package: `pnpm --filter engine test`.
 - `pnpm --filter web dev`: the site from the source on `localhost`;
   `pnpm --filter web build`: the static site in `web/dist/`, after checking the
-  bundle's licenses against `web/license-allowlist.json`.
+  bundle's licenses against `web/license-allowlist.json`;
+  `pnpm --filter web e2e`: the build, then the Playwright smoke tests against it,
+  served by `deploy/compose.yaml` on `127.0.0.1:4180`.
+- `docker compose -f deploy/compose.yaml up -d`: serves `web/dist/` as a deploy
+  does, on port 8080 (`PLAYGROUND_PORT`, `PLAYGROUND_HOST_IP`).
 - `pnpm --filter engine oracle:generate [name...]`: rewrites the oracle tests'
   expected results from GCC and Clang, in the compiler image (needs Docker).
 

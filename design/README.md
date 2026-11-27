@@ -2,7 +2,7 @@
 
 Browser-based C playground for learning and teaching C.
 
-License: **AGPL-3.0** (see [LICENSE](../LICENSE), [licensing](licensing.md)).
+License: **AGPL-3.0-or-later** (see [LICENSE](../LICENSE), [licensing](licensing.md)).
 
 **How to read this spec.** This page holds the principles and a map. Each topic lives in its own file next to this one, short enough to read on its own: read this page first, then only the fragments your task needs. Decisions live here; research notes and benchmarks do not.
 

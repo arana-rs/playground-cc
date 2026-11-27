@@ -24,6 +24,8 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
-      # The build runs the dependency license check (design/licensing.md#allowed-licenses).
-      - run: pnpm --filter web build
+      # The build runs the dependency license check (design/licensing.md#allowed-licenses); the
+      # end-to-end tests run on it, served by the Compose file's static-web-server.
+      - run: pnpm --filter web exec playwright install --with-deps --only-shell chromium
+      - run: pnpm --filter web e2e
       - run: python3 design/check_links.py

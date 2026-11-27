@@ -37,8 +37,8 @@ The kinds of tests, the oracle tests against GCC and Clang, and CI. All of this 
 
 ## End-to-end tests
 
-- **Against the build**: they run on the production build served by the Compose file's pinned static-web-server image with its configuration file, headers included ([deployment](deployment.md#what-the-repository-ships)), never on `pnpm dev`; a CSP violation the page reports fails the test ([security](security.md#headers)).
-- **Minimal on purpose**: a few flows that only the real page can check, in Chromium: run a program and see its output; type input while it waits; Stop a loop; see a diagnostic in the console and its marker in the editor; reload and keep the code.
+- **Against the build**: they run on the production build served by the Compose file's pinned static-web-server image with its configuration file, headers included ([deployment](deployment.md#what-the-repository-ships)), never on `pnpm dev`, on `127.0.0.1:4180`; a CSP violation the page or its Worker reports, or an uncaught page error, fails the test ([security](security.md#headers)). The page's listener does not see a Worker's violations, so each Worker gets its own. They also check the headers of a page and of a 404, and that the notices are served as text. The container is removed before and after them, so nothing keeps the port.
+- **Minimal on purpose**: a few flows that only the real page can check, in Chromium: run a program and see its output; type input while it waits (0.4); Stop a loop; see a diagnostic in the console and its marker in the editor; open the third-party licenses from the settings; reload and keep the code (0.6).
 - **Exit tests are engine and oracle tests** wherever the engine alone can check them; a phase adds an end-to-end test only for a flow that needs the page.
 - **Not tested automatically**: the look and feel of the UI (layout, the debugger, the memory view). The project owner reviews it by hand on each release, together with Firefox and Safari ([browser support](frontend.md#browser-support)).
 

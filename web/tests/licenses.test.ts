@@ -146,9 +146,10 @@ describe('the check and the notices', () => {
       [notice({ version: '1.0.0' }), notice({ name: 'copied', how: 'code copied into the site' })],
       'https://example.org/source',
     );
-    expect(text.split('\n').slice(0, 3)).toEqual([
-      'playground-cc is licensed under the GNU Affero General Public License, version 3: see',
-      'LICENSE.txt, next to this file. Its source code is at',
+    expect(text.split('\n').slice(0, 4)).toEqual([
+      'playground-cc is licensed under the GNU Affero General Public License, version 3 or (at',
+      'your option) any later version (AGPL-3.0-or-later): see LICENSE.txt, next to this file. Its',
+      'source code is at',
       'https://example.org/source',
     ]);
     expect(text).toContain('pkg 1.0.0 (MIT), a package in the bundle\n');

@@ -1,0 +1,24 @@
+# Serves the built site with static-web-server and nothing else (design/deployment.md):
+#
+#   pnpm install --frozen-lockfile && pnpm --filter web build
+#   docker compose -f deploy/compose.yaml up -d
+#
+# It publishes on every interface, port 8080; behind a reverse proxy, set PLAYGROUND_HOST_IP to
+# 127.0.0.1. PLAYGROUND_PORT changes the port.
+name: playground-cc
+
+services:
+  web:
+    # 2.44.3, pinned by digest: a new version is a change to this line.
+    image: joseluisq/static-web-server:2.44.3@sha256:ccf2d666ffe5f8ef2ec96bc40f07757605998c04b78f7d8fdb98a584dd4f5717
+    command: ["--config-file", "/etc/static-web-server.toml"]
+    user: "65534:65534"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    volumes:
+      - ../web/dist:/public:ro
+      - ./static-web-server.toml:/etc/static-web-server.toml:ro
+    ports:
+      - "${PLAYGROUND_HOST_IP:+${PLAYGROUND_HOST_IP}:}${PLAYGROUND_PORT:-8080}:8080"
+    restart: unless-stopped
