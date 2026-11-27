@@ -45,6 +45,7 @@ The base of the web app: technologies, the single page, diagnostics, preferences
 ## i18n
 
 - Every UI string comes from the message catalogs; none is hardcoded.
+- The catalogs are `web/messages/es.json` and `web/messages/en.json`, compiled by Paraglide at build time. Its message-format plugin is a pinned development dependency loaded from `node_modules`, never fetched from a CDN during the build.
 - Each diagnostic code has a message function whose parameters are the code's args ([errors](errors.md#format)); a code without a message shows a generic message with the code.
 - Numbers are formatted with the user's locale, and plurals use Paraglide variants over `Intl.PluralRules`, never concatenated text.
 - Program output is never translated: it is shown as the program wrote it.

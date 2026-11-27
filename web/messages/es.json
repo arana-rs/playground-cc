@@ -1,0 +1,14 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "app_name": "playground-cc",
+  "run": "Ejecutar",
+  "stop": "Detener",
+  "status_ready": "Listo",
+  "status_running": "Ejecutando",
+  "status_exited": "Terminó con estado {status}",
+  "status_stopped": "Detenido",
+  "status_diagnostic": "Detenido por un error",
+  "editor_label": "Código",
+  "console_label": "Consola",
+  "console_hint": "Pulsa Ejecutar para ejecutar tu programa."
+}

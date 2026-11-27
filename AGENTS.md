@@ -23,6 +23,8 @@ Run from the repository root.
   pass before a step is done.
 - `pnpm lint` (Biome; `pnpm format` fixes what it can), `pnpm typecheck`,
   `pnpm test`; one package: `pnpm --filter engine test`.
+- `pnpm --filter web dev`: the site from the source on `localhost`;
+  `pnpm --filter web build`: the static site in `web/dist/`.
 - `pnpm --filter engine oracle:generate [name...]`: rewrites the oracle tests'
   expected results from GCC and Clang, in the compiler image (needs Docker).
 

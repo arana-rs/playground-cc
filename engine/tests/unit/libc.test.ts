@@ -128,7 +128,7 @@ describe('printf format checks', () => {
       ['%-%', '%-%'],
       ['%5.3.d', '%5.3.'],
       ['%é', '%é'],
-      ['%\\xff', '%�'],
+      ['%\\xff', '%\ufffd'],
       ['%\\0d', '%'],
     ]) {
       expect(check(`printf("${format}", 1);`), format).toMatchObject({

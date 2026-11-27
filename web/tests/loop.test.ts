@@ -57,7 +57,7 @@ describe('WorkerLoop', () => {
     queue.run();
     for (const message of messages)
       if (message.type === 'output') {
-        expect(message.text).not.toContain('�');
+        expect(message.text).not.toContain('\uFFFD');
       }
     expect(text(messages)).toBe('ñandú 😀\n');
   });
@@ -141,7 +141,7 @@ describe('WorkerLoop', () => {
     queue.run(20);
     loop.handle({ type: 'stop', runId: 1 });
     expect(messages).toEqual([
-      { type: 'output', runId: 1, text: '�' },
+      { type: 'output', runId: 1, text: '\uFFFD' },
       { type: 'ended', runId: 1, reason: 'stopped' },
     ]);
   });
